@@ -9,6 +9,16 @@ const WEBSITE = "https://velvet-pro.ru"
 const CACHE_DIR = join(process.cwd(), 'cache');
 const linksFile = join(CACHE_DIR, '_links.json');
 
+
+const contentFix = (content?: string): string => {
+    if (!content) {
+        return '';
+    }
+    return content
+        .replace("/россии/gi", "Беларуси")
+        .replace("/россия/gi", "Беларусь")
+}
+
 const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promise<ContentResponse> => {
     const res = await fetch(`${WEBSITE}${pathToFetch}`);
     if (!res.ok) {
@@ -19,41 +29,48 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
     const { window } = dom;
     const { document } = window;
 
-    const header = document.querySelector('header');
-    if (header) {
-        header.remove();
-    }
-
+    // links
     const links = document.querySelectorAll('link');
     const linksArray =  Array.from(links).map(link => ({
         rel: link.rel,
-        href: link.href,
+        href: WEBSITE + link.href,
         type: link.type
-    }));
+    }))
+    .filter(l => l.rel);
     await writeFile(linksFile, JSON.stringify(linksArray), 'utf-8');
 
+    // meta
     const titleNode = document.querySelector('title');
-    const title= titleNode?.textContent || "";
+    const title= contentFix(titleNode?.textContent);
     const metaElements = document.querySelectorAll('meta');
-    const meta = Array.from(metaElements).map(meta => ({
+    const metaData = Array.from(metaElements)
+        .map(meta => ({
         name: meta.getAttribute('name') || '',
         content: meta.getAttribute('content') || '',
         property: meta.getAttribute('property') || '',
         httpEquiv: meta.getAttribute('http-equiv') || '',
         charset: meta.getAttribute('charset') || ''
     }));
-    const pageMeta = JSON.stringify({ title, meta });
-    await writeFile(cacheFilePath + ".json", pageMeta, 'utf-8');
+    const description = contentFix(metaData.find(m => m.name === 'description')?.content);
+    const keywords = contentFix(metaData.find(m => m.name === 'keywords')?.content);
+    const pageMeta = { title, description, keywords };
+    await writeFile(cacheFilePath + ".json", JSON.stringify(pageMeta), 'utf-8');
 
-    const head = document.querySelector('head');
-    if (head) {
-        console.log(head.textContent);
+    // content
+    const header = document.querySelector('header');
+    if (header) {
+        header.remove();
     }
 
-    const cleanedHtml = dom.serialize();
-    await writeFile(cacheFilePath + ".html", cleanedHtml, 'utf-8');
+    const body = document.querySelector('body');
+    const serializedBody = body?.innerHTML ?? "<h1>Body is empty</h1>";
+    const fixedContent = contentFix(serializedBody);
+    const bodyFinal = fixedContent
+        .replace(/(<(img|video)[^>]*\ssrc=")\/upload/g,'$1/api/assets')
+        .replace(/(<(img|video)[^>]*\ssrc=")\/local\/templates/g,'$1/api/static')
+    await writeFile(cacheFilePath + ".html", bodyFinal, 'utf-8');
 
-    return { content: cleanedHtml, links: linksArray, meta: { title, meta }}
+    return { content: bodyFinal, links: linksArray, meta: pageMeta }
 }
 
 export async function PUT(
@@ -61,9 +78,9 @@ export async function PUT(
 ) {
         const body = await request.json();
         console.log(body);
-        await new Promise(resolve => {
-            setTimeout(resolve, 3000);
-        })
+        // await new Promise(resolve => {
+        //     setTimeout(resolve, 3000);
+        // })
         // if (!url) {
         //     return new Response(
         //         JSON.stringify({ error: 'URL is required' }),
@@ -86,7 +103,7 @@ export async function PUT(
             }
 
             // @TODO: Prevent content fetching too often
-            _fetchContent(pathToFetch, cacheFilePath);
+            _fetchContent(pathToFetch, cacheFilePath).catch(console.error);
             const [content, metaString, linksString] = await Promise.all([
                 readFile(cacheFilePath + ".html", 'utf-8'),
                 readFile(cacheFilePath + ".json", 'utf-8'),

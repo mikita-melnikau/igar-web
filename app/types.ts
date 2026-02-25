@@ -5,7 +5,7 @@ type Metadata = {
     httpEquiv: string;
     charset: string;
 }
-export type PageMetadata = { title: string; meta: Metadata[] };
+export type PageMetadata = { title: string; description: string; keywords: string };
 type HeadLink = {
     rel: string;
     href: string;
