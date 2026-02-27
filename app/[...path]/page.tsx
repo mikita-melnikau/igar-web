@@ -43,8 +43,11 @@ export async function generateMetadata(
     keywords: meta.keywords,
   };
 }
-export default async function Home() {
-  const { content, links, scripts } = await fetchPageData("/");
+
+export default async function Pages({ params }: { params: Promise<{ path: string[] }> }) {
+  const { path } = await params;
+  const normalizedPaths = path.join("/");
+  const { content, links, scripts } = await fetchPageData(`/${normalizedPaths}`);
 
   return (
     <>

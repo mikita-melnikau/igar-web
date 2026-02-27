@@ -1,10 +1,10 @@
 import { readFile, writeFile } from "fs/promises";
-import { existsSync } from "fs";
 import { join } from "path";
 import { JSDOM } from "jsdom";
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import type { ContentResponse } from "@/app/types";
+import { existsSync } from "node:fs";
 
 const WEBSITE = "https://velvet-pro.ru";
 const CACHE_DIR = join(process.cwd(), "cache");
@@ -37,6 +37,16 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
     }))
     .filter((l) => l.rel);
   await writeFile(linksFile, JSON.stringify(linksArray), "utf-8");
+
+  // scripts
+  const scripts = document.querySelectorAll("script");
+  const scriptsArray = Array.from(scripts).map((script) => ({
+    src: script.src ? (script.src.startsWith("http") ? script.src : WEBSITE + script.src) : "",
+    innerHTML: script.innerHTML ?? "",
+    type: script.type ?? "text/javascript",
+    defer: script.defer ?? false,
+    async: script.async ?? false,
+  }));
 
   // meta
   const titleNode = document.querySelector("title");
@@ -73,7 +83,7 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
 
   await writeFile(cacheFilePath + ".html", bodyFinal, "utf-8");
 
-  return { content: bodyFinal, links: linksArray, meta: pageMeta };
+  return { content: bodyFinal, links: linksArray, meta: pageMeta, scripts: scriptsArray };
 };
 
 export async function PUT(request: NextRequest) {
@@ -106,15 +116,19 @@ export async function PUT(request: NextRequest) {
     }
 
     // @TODO: Prevent content fetching too often
-    _fetchContent(pathToFetch, cacheFilePath).catch(console.error);
+    const data = await _fetchContent(pathToFetch, cacheFilePath);
+    const scripts = data.scripts;
+
     const [content, metaString, linksString] = await Promise.all([
       readFile(cacheFilePath + ".html", "utf-8"),
       readFile(cacheFilePath + ".json", "utf-8"),
       readFile(linksFile, "utf-8"),
     ]);
-    const meta = JSON.parse(metaString);
-    const links = JSON.parse(linksString);
-    const result: ContentResponse = { content, meta, links };
+
+    const meta = metaString ? JSON.parse(metaString) : {};
+    const links = linksString ? JSON.parse(linksString) : [];
+    const result: ContentResponse = { content, meta, links, scripts };
+
     return NextResponse.json(result, { status: 200 });
   } catch (reason) {
     console.error(reason);
