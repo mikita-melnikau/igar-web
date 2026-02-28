@@ -1,10 +1,10 @@
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "node:fs";
-import { JSDOM } from "jsdom";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import type { ContentResponse } from "@/app/types";
+import {readFile, writeFile} from "fs/promises";
+import {join} from "path";
+import {existsSync} from "node:fs";
+import {JSDOM} from "jsdom";
+import type {NextRequest} from "next/server";
+import {NextResponse} from "next/server";
+import type {ContentResponse} from "@/app/types";
 
 const WEBSITE = "https://velvet-pro.ru";
 const CACHE_DIR = join(process.cwd(), "cache");
@@ -79,24 +79,41 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   await writeFile(linksFile, JSON.stringify(linksArray), "utf-8");
 
   // scripts
-  const scripts = document.querySelectorAll("script");
-  const scriptsArray = Array.from(scripts).map((script) => ({
-    src: script.src ? (script.src.startsWith("http") ? script.src : WEBSITE + script.src) : "",
-    innerHTML: script.innerHTML ?? "",
-    type: script.type ?? "text/javascript",
-    defer: script.defer ?? false,
-    async: script.async ?? false,
-  }));
-  await writeFile(scriptsFile, JSON.stringify(scriptsArray), "utf-8");
+  const jivoScripts = Array.from(document.querySelectorAll("script")).filter((script) => {
+    const src = script.src || "";
+    const text = script.textContent || "";
+    return src.includes("jivosite") || src.includes("jivo") || text.includes("jivosite") || text.includes("jivo");
+  });
+  jivoScripts.forEach((script) => script.remove());
 
-  scripts.forEach((script) => {
-    if (script.textContent && !script.src) {
-      const updated = script.textContent
+  const scripts = Array.from(document.querySelectorAll("script"));
+  const scriptsArray = [];
+
+  for (const script of scripts) {
+    const src = script.src || "";
+    let text = script.textContent || "";
+
+    if (src.includes("jivosite") || src.includes("jivo") || text.includes("jivosite") || text.includes("jivo")) {
+      script.remove();
+    }
+
+    if (text && !src) {
+      text = text
         .replace(/\/upload\/([^"'\s]+)/g, "/api/assets?path=$1")
         .replace(/\/local\/templates\/([^"'\s]+)/g, "/api/static?path=$1");
-      script.textContent = updated;
     }
-  });
+    script.textContent = text;
+
+    scriptsArray.push({
+      src: src ? (src.startsWith("http") ? src : WEBSITE + src) : "",
+      innerHTML: text,
+      type: script.type ?? "text/javascript",
+      defer: script.defer ?? false,
+      async: script.async ?? false,
+    });
+  }
+
+  await writeFile(scriptsFile, JSON.stringify(scriptsArray), "utf-8");
 
   // meta
   const titleNode = document.querySelector("title");
