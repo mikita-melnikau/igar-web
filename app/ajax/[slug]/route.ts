@@ -33,8 +33,8 @@ export async function GET(request: NextRequest) {
       statusText: response.statusText,
       headers,
     });
-  } catch (e) {
-    console.error("Video proxy error:", error);
-    return NextResponse.json({ error: "Proxy error" }, { status: 500 });
+  } catch (error) {
+    console.error("ajax error:", error);
+    return NextResponse.json({ error: "ajax error" }, { status: 500 });
   }
 }

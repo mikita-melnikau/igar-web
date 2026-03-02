@@ -1,21 +1,19 @@
-import {readFile, writeFile} from "fs/promises";
-import {join} from "path";
-import {existsSync} from "node:fs";
-import {JSDOM} from "jsdom";
-import type {NextRequest} from "next/server";
-import {NextResponse} from "next/server";
-import type {ContentResponse} from "@/app/types";
+import { readFile, writeFile } from "fs/promises";
+import { join } from "path";
+import { existsSync } from "node:fs";
+import { JSDOM } from "jsdom";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import type { ContentResponse } from "@/app/types";
 
 const WEBSITE = "https://velvet-pro.ru";
 const CACHE_DIR = join(process.cwd(), "cache");
-const linksFile = join(CACHE_DIR, "_links.json");
-const scriptsFile = join(CACHE_DIR, "_scripts.json");
 
 const contentFix = (content?: string): string => {
   if (!content) {
     return "";
   }
-  return content.replace("/россии/gi", "Беларуси").replace("/россия/gi", "Беларусь");
+  return content.replace(/россии/gi, "Беларуси").replace(/россия/gi, "Беларусь");
 };
 
 const replaceUrl = (url: string): string => {
@@ -58,9 +56,15 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
       Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     },
   });
+
+  if (res.status === 404) {
+    throw new Error("Page not found");
+  }
+
   if (!res.ok) {
     throw new Error(`Failed to fetch: ${res.statusText}`);
   }
+
   const html = await res.text();
 
   const dom = new JSDOM(html);
@@ -76,7 +80,7 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
       type: link.type,
     }))
     .filter((l) => l.rel);
-  await writeFile(linksFile, JSON.stringify(linksArray), "utf-8");
+  await writeFile(cacheFilePath + ".links.json", JSON.stringify(linksArray), "utf-8");
 
   // scripts
   const jivoScripts = Array.from(document.querySelectorAll("script")).filter((script) => {
@@ -113,7 +117,7 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
     });
   }
 
-  await writeFile(scriptsFile, JSON.stringify(scriptsArray), "utf-8");
+  await writeFile(cacheFilePath + ".scripts.json", JSON.stringify(scriptsArray), "utf-8");
 
   // meta
   const titleNode = document.querySelector("title");
@@ -238,6 +242,7 @@ export async function PUT(request: NextRequest) {
   } catch (reason) {
     console.error(reason);
     const message = reason instanceof Error ? reason.message : "Unexpected exception";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const status = message === "Page not found" ? 404 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }

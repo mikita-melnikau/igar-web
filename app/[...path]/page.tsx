@@ -1,6 +1,7 @@
 import type { ContentResponse } from "@/app/types";
 import type { Metadata, ResolvingMetadata } from "next";
 import { AppSafeContent } from "@/app/components/content";
+import { notFound } from "next/navigation";
 
 type Props = {
   paramsPromise: Promise<{ id: string }>;
@@ -48,6 +49,10 @@ export default async function Pages({ params }: { params: Promise<{ path: string
   const { path } = await params;
   const normalizedPaths = path.join("/");
   const { content, links, scripts } = await fetchPageData(`/${normalizedPaths}`);
+
+  if (!content) {
+    return notFound();
+  }
 
   return (
     <>
