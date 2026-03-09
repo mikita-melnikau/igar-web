@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  push:
+    branches: [deploy]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.1.38"
+
+      - run: bun install
+      - run: bun run build
+
+      - name: Pack artifacts
+        run: |
+          tar -czf build.tar.gz \
+            .next \
+            public \
+            package.json \
+            bun.lock \
+            next.config.*
+
+      - name: Upload to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "build.tar.gz"
+          target: "/var/www/app"
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /var/www/app
+            tar -xzf build.tar.gz
+            /home/deploy/.bun/bin/bun install --production --frozen-lockfile
+            sudo systemctl restart myapp
+            sudo systemctl status myapp --no-pager
