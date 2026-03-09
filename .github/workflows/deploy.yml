@@ -47,6 +47,8 @@ jobs:
           script: |
             cd /var/www/app
             tar -xzf build.tar.gz
-            /home/deploy/.bun/bin/bun install --production --frozen-lockfile
-            sudo systemctl restart myapp
-            sudo systemctl status myapp --no-pager
+            export PATH="$HOME/.bun/bin:$PATH"
+            bun install --production --frozen-lockfile
+            export XDG_RUNTIME_DIR=/run/user/$(id -u)
+            systemctl --user restart myapp
+            systemctl --user status myapp --no-pager
