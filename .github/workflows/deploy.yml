@@ -17,17 +17,21 @@ jobs:
         with:
           bun-version: "1.1.38"
 
-      - run: bun install
-      - run: bun run build
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Prepare standalone bundle
+        run: |
+          cp -r public .next/standalone/public
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
 
       - name: Pack artifacts
         run: |
-          tar -czf build.tar.gz \
-            .next \
-            public \
-            package.json \
-            bun.lock \
-            next.config.*
+          tar -czf build.tar.gz -C .next/standalone .
 
       - name: Upload to server
         uses: appleboy/scp-action@v0.1.7
@@ -45,10 +49,11 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            set -e
             cd /var/www/app
+            rm -rf .next public server.js node_modules package.json
             tar -xzf build.tar.gz
-            export PATH="$HOME/.bun/bin:$PATH"
-            bun install --production --frozen-lockfile
+            rm -f build.tar.gz
             export XDG_RUNTIME_DIR=/run/user/$(id -u)
             systemctl --user restart myapp
             systemctl --user status myapp --no-pager
