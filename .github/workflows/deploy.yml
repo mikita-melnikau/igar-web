@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.1.38"
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Prepare standalone bundle
+        run: |
+          cp -r public .next/standalone/public
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
+
+      - name: Pack artifacts
+        run: |
+          tar -czf build.tar.gz -C .next/standalone .
+
+      - name: Upload to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "build.tar.gz"
+          target: "/var/www/app"
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            set -e
+            cd /var/www/app
+            rm -rf .next public server.js node_modules package.json
+            tar -xzf build.tar.gz
+            rm -f build.tar.gz
+            export XDG_RUNTIME_DIR=/run/user/$(id -u)
+            systemctl --user restart myapp
+            systemctl --user status myapp --no-pager

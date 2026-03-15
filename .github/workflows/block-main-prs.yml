@@ -1,0 +1,16 @@
+name: block-main-prs.yml
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source branch
+        run: |
+          if [[ "${{ github.head_ref }}" != "develop" ]]; then
+            echo "Only develop branch can be merged into main"
+            exit 1
+          fi
