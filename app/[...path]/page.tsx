@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { AppSafeContent } from "@/app/components/content";
+import { getSsrBaseUrl } from "@/app/helpers/request.helpers";
 import type { ContentResponse } from "@/app/types";
 import type { Metadata, ResolvingMetadata } from "next";
 
@@ -10,8 +11,7 @@ type Props = {
 const fetchPageData = async (pathToFetch: string): Promise<ContentResponse> => {
   const body = JSON.stringify({ path: pathToFetch });
   const options = { method: "PUT", body };
-  const baseUrl = process.env["NEXT_PUBLIC_URL"];
-
+  const baseUrl = await getSsrBaseUrl();
   const response = await fetch(`${baseUrl}/api/content`, options);
   return response.json();
 };
