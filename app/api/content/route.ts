@@ -108,7 +108,6 @@ export async function PUT(request: NextRequest) {
   const body = await request.json();
 
   const { path } = body;
-  console.log(body);
   const pathToFetch = path ?? "/";
   const fileName = !pathToFetch || pathToFetch === "/" ? "___" : pathToFetch;
   const cacheFilePath = join(CACHE_DIR, encodeURIComponent(fileName));

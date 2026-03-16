@@ -17,15 +17,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  /*
-    as={link.as}     // Опционально (для preload)
-    crossOrigin={link.crossOrigin} // Опционально
-    media={link.media} // Опционально
-    sizes={link.sizes} // Опционально (для иконок)
-   */
-
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="ru">
       <head></head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AppHeader />
