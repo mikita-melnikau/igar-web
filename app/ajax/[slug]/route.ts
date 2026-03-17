@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
+import { WEBSITE } from "@/app/constants/constants";
 import type { NextRequest } from "next/server";
-
-const WEBSITE = "https://velvet-pro.ru";
 
 export async function GET(request: NextRequest) {
   try {

@@ -3,10 +3,10 @@ import { join } from "path";
 import { existsSync } from "node:fs";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
+import { WEBSITE } from "@/app/constants/constants";
 import type { NextRequest } from "next/server";
 import type { ContentResponse } from "@/app/types";
 
-const WEBSITE = "https://velvet-pro.ru";
 const CACHE_DIR = join(process.cwd(), "cache");
 const locks = new Map<string, Promise<ContentResponse>>();
 const updating = new Set<string>();
