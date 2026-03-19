@@ -25,7 +25,6 @@ jobs:
 
       - name: Prepare standalone bundle
         run: |
-          cp -r public .next/standalone/public
           mkdir -p .next/standalone/.next
           cp -r .next/static .next/standalone/.next/static
 
