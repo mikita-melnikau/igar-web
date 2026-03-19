@@ -1,12 +1,13 @@
+import { notFound } from "next/navigation";
 import { AppSafeContent } from "@/app/components/content";
 import { getSsrBaseUrl } from "@/app/helpers/request.helpers";
 import type { ContentResponse } from "@/app/types";
 import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
+  params: Promise<{ path: string[] }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
-
 const fetchPageData = async (pathToFetch: string): Promise<ContentResponse> => {
   const body = JSON.stringify({ path: pathToFetch });
   const options = { method: "PUT", body };
@@ -15,10 +16,11 @@ const fetchPageData = async (pathToFetch: string): Promise<ContentResponse> => {
   return response.json();
 };
 
-export async function generateMetadata({ searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const { path } = await params;
   const sp = await searchParams;
-  const pathname = "/";
 
+  const pathname = path ? `/${Object.values(path).join("/")}` : "/";
   const filtered: Record<string, string> = {};
   for (const [key, value] of Object.entries(sp)) {
     if (typeof value === "string") {
@@ -39,8 +41,15 @@ export async function generateMetadata({ searchParams }: Props, parent: Resolvin
     keywords: meta?.keywords,
   };
 }
-export default async function Home() {
-  const { content, links, scripts } = await fetchPageData("/");
+
+export default async function Pages({ params }: { params: Promise<{ path: string[] }> }) {
+  const { path } = await params;
+  const normalizedPaths = path.join("/");
+  const { content, links, scripts } = await fetchPageData(`/${normalizedPaths}`);
+
+  if (!content) {
+    return notFound();
+  }
 
   return (
     <>

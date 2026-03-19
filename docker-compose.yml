@@ -1,0 +1,17 @@
+# Важно!
+# Почему в Dockerfile загружается образ NodeJS, а не bun
+# Потому что в образе bun есть баг на загрузку jsdom который не исправить!
+services:
+  igar:
+    container_name: ab-market-dev
+    build:
+      dockerfile: .dev.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/opt/app
+      - /opt/app/cache
+      - /opt/app/node_modules
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped
