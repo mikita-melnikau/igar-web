@@ -55,5 +55,5 @@ jobs:
             tar -xzf build.tar.gz
             rm -f build.tar.gz
             export XDG_RUNTIME_DIR=/run/user/$(id -u)
-            systemctl restart nextjs
-            systemctl status nextjs --no-pager
+            systemctl --user restart nextjs
+            systemctl --user status nextjs --no-pager
