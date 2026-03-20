@@ -12,16 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: "1.1.38"
+          node-version: "24"
+          cache: "npm"
 
       - name: Install deps
-        run: bun install --frozen-lockfile
+        run: npm ci
 
       - name: Build
-        run: bun run build
+        run: npm run build
 
       - name: Prepare standalone bundle
         run: |
