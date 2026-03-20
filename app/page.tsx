@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { AppSafeContent } from "@/app/components/content";
 import { getSsrBaseUrl } from "@/app/helpers/request.helpers";
 import type { ContentResponse } from "@/app/types";
@@ -39,7 +40,8 @@ export async function generateMetadata({ searchParams }: Props, parent: Resolvin
     keywords: meta?.keywords,
   };
 }
-export default async function Home() {
+
+const PageComponent = async () => {
   const { content, links, scripts } = await fetchPageData("/");
 
   return (
@@ -52,16 +54,18 @@ export default async function Home() {
 
       {scripts?.map((script, index) =>
         script.src ? (
-          <script key={index} src={script.src} async={script.async} defer={script.defer} />
+          <Script key={index} src={script.src} strategy="afterInteractive" />
         ) : (
-          <script
+          <Script
             key={index}
-            async={script.async}
-            defer={script.defer}
-            dangerouslySetInnerHTML={{ __html: script.innerHTML }}
+            id={`inline-script-${index}`}
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{ __html: script.innerHTML || "" }}
           />
         ),
       )}
     </>
   );
-}
+};
+
+export default PageComponent;
