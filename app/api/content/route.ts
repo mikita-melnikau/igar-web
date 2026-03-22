@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 import { applyGoogleFonts } from "@/app/api/helpers/content.helpers";
-import { config } from "@/app/config";
+import { config } from "@/config";
 import type { NextRequest } from "next/server";
 import type { ContentResponse } from "@/app/types";
 

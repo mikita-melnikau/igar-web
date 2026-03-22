@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { config } from "@/app/config";
+import { config } from "@/config";
 
 export async function getSsrBaseUrl() {
   if (typeof window === "undefined") {

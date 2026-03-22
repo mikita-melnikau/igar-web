@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { config } from "@/app/config";
+import { config } from "@/config";
 import type { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
