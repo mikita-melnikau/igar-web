@@ -1,4 +1,3 @@
-import Script from "next/script";
 import { notFound } from "next/navigation";
 import { AppSafeContent } from "@/app/components/content";
 import { fetchPageData } from "@/app/lib/page-data";
@@ -24,13 +23,13 @@ export const PageRenderer = async ({ path }: PageRendererProps) => {
 
       {scripts?.map((script, index) =>
         script.src ? (
-          <Script key={index} src={script.src} strategy="afterInteractive" />
+          <script key={index} src={script.src} async={script.async} defer={script.defer} />
         ) : (
-          <Script
+          <script
             key={index}
-            id={`inline-script-${index}`}
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{ __html: script.innerHTML || "" }}
+            async={script.async}
+            defer={script.defer}
+            dangerouslySetInnerHTML={{ __html: script.innerHTML }}
           />
         ),
       )}
