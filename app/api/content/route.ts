@@ -3,8 +3,8 @@ import { join } from "path";
 import { existsSync } from "node:fs";
 import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
-import { applyGoogleFonts } from "@/app/api/helpers/content.helpers";
 import { config } from "@/config";
+import { applyGoogleFonts } from "@/app/api/helpers/content.helpers";
 import type { NextRequest } from "next/server";
 import type { ContentResponse } from "@/app/types";
 
@@ -44,17 +44,25 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   const { window } = dom;
   const { document } = window;
 
-  applyGoogleFonts(document);
-
   // links
-  const links = document.querySelectorAll("link");
-  const linksArray = Array.from(links)
-    .map((link) => ({
+  const links = Array.from(document.querySelectorAll("link"));
+  const linksArray = [];
+  for (const link of links) {
+    if (!link.rel || !link.href) {
+      continue;
+    }
+    const mappedLink = {
       rel: link.rel,
-      href: config.SOURCE_WEBSITE + link.href,
+      href: link.href,
       type: link.type,
-    }))
-    .filter((l) => l.rel);
+    };
+    if (!/^https?:\/\//.test(mappedLink.href)) {
+      mappedLink.href = `${config.SOURCE_WEBSITE}${mappedLink.href}`;
+    }
+    linksArray.push(mappedLink);
+  }
+
+  applyGoogleFonts(document);
 
   // scripts
   const scripts = Array.from(document.querySelectorAll("script"));
