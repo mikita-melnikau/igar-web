@@ -48,19 +48,18 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   const links = Array.from(document.querySelectorAll("link"));
   const linksArray = [];
   for (const link of links) {
-    if (!link.rel) {
+    if (!link.rel || !link.href) {
       continue;
     }
-
-    const rawHref = link.href || "";
-    const isAbsolute = /^https?:\/\//.test(rawHref);
-    const fullHref = isAbsolute ? rawHref : `${config.SOURCE_WEBSITE}${rawHref}`;
-
-    linksArray.push({
+    const mappedLink = {
       rel: link.rel,
-      href: fullHref,
+      href: link.href,
       type: link.type,
-    });
+    };
+    if (!/^https?:\/\//.test(mappedLink.href)) {
+      mappedLink.href = `${config.SOURCE_WEBSITE}${mappedLink.href}`;
+    }
+    linksArray.push(mappedLink);
   }
 
   applyGoogleFonts(document);
