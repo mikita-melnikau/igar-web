@@ -99,10 +99,76 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   const keywords = contentFix(metaData.find((m) => m.name === "keywords")?.content);
   const pageMeta = { title, description, keywords };
 
-  const header = document.querySelector("header");
+  // header
+  const authBtn = document.querySelector(".header__account-link");
+  const cartBtn = document.querySelector(".header__cart");
+  const search = document.querySelector("#title-search");
+  const mobileSearch = document.querySelector(".open-mobile-search");
+  const logoImg = document.querySelector<HTMLImageElement>(".logo__img");
+  const geo = document.querySelector<HTMLElement>(".header__geo");
+  const mobileCopyright = document.querySelector(".header-mobile__inner-copyright");
+  const contacts = document.querySelectorAll(".header-mobile__inner-contact");
 
-  if (header) {
-    header.remove();
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]').forEach((a) => {
+    a.href = "mailto:abmarketbel@gmail.com";
+    a.textContent = "abmarketbel@gmail.com";
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="tel:"]').forEach((a) => {
+    a.href = "tel:+375296038038";
+    a.textContent = "+375296038038";
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="https://t.me/"]').forEach((a) => {
+    a.href = "https://t.me/+375296038038";
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="https://max.ru/"]').forEach((a) => {
+    a.href = "https://wa.me/375296038038";
+    a.classList.remove("max");
+    a.innerHTML = '<img src="whatsapp.svg" alt="WhatsApp">';
+  });
+
+  if (authBtn) {
+    authBtn.remove();
+  }
+
+  if (cartBtn) {
+    cartBtn.remove();
+  }
+
+  if (search) {
+    search.remove();
+  }
+
+  if (mobileSearch) {
+    mobileSearch.remove();
+  }
+
+  if (logoImg) {
+    logoImg.src = "/logo.svg";
+    logoImg.alt = "Ab-market";
+  }
+
+  if (geo) {
+    geo.removeAttribute("data-geo-location");
+    geo.removeAttribute("data-real-city");
+    geo.textContent = "Беларусь";
+  }
+
+  // header on mobile
+  if (contacts[1]) {
+    contacts[1].remove();
+  }
+  const firstContact = contacts[0];
+  const info = firstContact?.querySelector(".info");
+
+  if (info) {
+    info.remove();
+  }
+
+  if (mobileCopyright) {
+    mobileCopyright.innerHTML = '© ООО "АБ Маркет" 2026';
   }
 
   const body = document.querySelector("body");
