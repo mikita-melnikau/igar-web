@@ -44,6 +44,8 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   const { window } = dom;
   const { document } = window;
 
+  applyGoogleFonts(document);
+
   // links
   const links = Array.from(document.querySelectorAll("link"));
   const linksArray = [];
@@ -61,8 +63,6 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
     }
     linksArray.push(mappedLink);
   }
-
-  applyGoogleFonts(document);
 
   // scripts
   const scripts = Array.from(document.querySelectorAll("script"));

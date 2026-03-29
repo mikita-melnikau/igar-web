@@ -22,6 +22,6 @@ export const applyGoogleFonts = (document: Document) => {
   const link3 = document.createElement("link");
   link3.rel = "stylesheet";
   link3.href =
-    "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
+    "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@400;700&display=swap";
   document.head.appendChild(link3);
 };
