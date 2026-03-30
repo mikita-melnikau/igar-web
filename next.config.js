@@ -21,6 +21,8 @@ const nextConfig = {
   env: {
     BUILD_ID: process.env.NEXT_PUBLIC_APP_VERSION || "dev-" + Date.now(),
   },
+
+  skipTrailingSlashRedirect: true,
 };
 
 module.exports = nextConfig;
