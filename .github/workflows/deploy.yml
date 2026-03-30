@@ -22,7 +22,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: NEXT_PUBLIC_APP_VERSION=${{ github.sha }} npm run build
 
       - name: Prepare standalone bundle
         run: |
