@@ -161,10 +161,12 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   if (headerBottom) {
     const customBlock = document.createElement("div");
 
-    customBlock.innerHTML = `<p style="font-size: 11px;" class="container-2025">
-    <strong>ООО "АБ Маркет"</strong> является официальным представителем 
-    <strong>Фабрика "Нева Тафт"</strong> - крупнейшего производителя ковровых покрытий в России, Беларуси и ЕАЭС, 
-    <strong>ООО "Вельвет Про"</strong> производитель ковров и штор под заказ в Росии.
+    customBlock.innerHTML = `<p style="font-size: 12px; display: flex; flex-wrap: wrap" class="container-2025">
+    <span> <strong>ООО "АБ Маркет"</strong> является официальным представителем  
+    <a style="color: inherit; border: none; text-decoration: underline;"  href="https://nevatuft.ru/" target="_blank">фабрики "Нева Тафт"</a>
+     -&nbsp;</span><span>крупнейшего производителя ковровых покрытий в ЕАЭС,</span>
+    <span>а также представителем <a style="color: inherit; border: none; text-decoration: underline;" href="https://velvet-pro.ru/" target="_blank">ООО "Вельвет Про"</a> 
+    - ведущего производителя ковров и штор под заказ в Российской Федерации.</span>
   </p>`;
 
     customBlock.style.position = "relative";
