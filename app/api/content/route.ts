@@ -46,6 +46,27 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
 
   applyGoogleFonts(document);
 
+  // change links
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]').forEach((a) => {
+    a.href = "mailto:abmarketbel@gmail.com";
+    a.textContent = "abmarketbel@gmail.com";
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="tel:"]').forEach((a) => {
+    a.href = "tel:+375296038038";
+    a.textContent = "+375 29 603-80-38";
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="https://t.me/"]').forEach((a) => {
+    a.href = "https://t.me/+375296038038";
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="https://max.ru/"]').forEach((a) => {
+    a.href = "https://wa.me/375296038038";
+    a.classList.remove("max");
+    a.innerHTML = '<img src="/whatsapp.svg" alt="WhatsApp">';
+  });
+
   // links
   const links = Array.from(document.querySelectorAll("link"));
   const linksArray = [];
@@ -108,26 +129,7 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   const geo = document.querySelector<HTMLElement>(".header__geo");
   const mobileCopyright = document.querySelector(".header-mobile__inner-copyright");
   const contacts = document.querySelectorAll(".header-mobile__inner-contact");
-
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]').forEach((a) => {
-    a.href = "mailto:abmarketbel@gmail.com";
-    a.textContent = "abmarketbel@gmail.com";
-  });
-
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="tel:"]').forEach((a) => {
-    a.href = "tel:+375296038038";
-    a.textContent = "+375296038038";
-  });
-
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="https://t.me/"]').forEach((a) => {
-    a.href = "https://t.me/+375296038038";
-  });
-
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="https://max.ru/"]').forEach((a) => {
-    a.href = "https://wa.me/375296038038";
-    a.classList.remove("max");
-    a.innerHTML = '<img src="/whatsapp.svg" alt="WhatsApp">';
-  });
+  const innerHeader = document.querySelector(".header__inner");
 
   if (authBtn) {
     authBtn.remove();
@@ -148,12 +150,23 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
   if (logoImg) {
     logoImg.src = "/logo.svg";
     logoImg.alt = "Ab-market";
+    logoImg.style.height = "100%";
   }
 
   if (geo) {
     geo.removeAttribute("data-geo-location");
     geo.removeAttribute("data-real-city");
     geo.textContent = "Беларусь";
+  }
+
+  if (innerHeader) {
+    const customBlock = document.createElement("div");
+    customBlock.innerHTML = `<p style="font-size: 13px;" class="container-2025" ><strong>ООО "АБ Маркет"</strong> является официальным представителем <strong>Фабрика "Нева Тафт"</strong> - крупнейшего производителя ковровых покрытий в России, Беларуси и ЕАЭС, <strong> ООО "Вельвет Про"</strong> производитель ковров и штор под заказ в Росии.</p>`;
+
+    customBlock.style.position = "relative";
+    customBlock.style.borderBottom = "1px solid #e8ecf0";
+    customBlock.classList.add("custom-block");
+    innerHeader.appendChild(customBlock);
   }
 
   // header on mobile
