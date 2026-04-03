@@ -5,6 +5,7 @@ import { JSDOM } from "jsdom";
 import { NextResponse } from "next/server";
 import { config } from "@/config";
 import { applyGoogleFonts } from "@/app/api/helpers/content.helpers";
+import { fetchAtMostOncePerHour } from "@/app/lib/request-memory";
 import type { NextRequest } from "next/server";
 import type { ContentResponse } from "@/app/types";
 
@@ -222,7 +223,7 @@ export async function PUT(request: NextRequest) {
     const scriptsFile = cacheFilePath + ".scripts.json";
 
     const isCached = existsSync(htmlFile) && existsSync(metaFile) && existsSync(linksFile) && existsSync(scriptsFile);
-    const lockKey = cacheFilePath;
+    const key = cacheFilePath;
 
     if (isCached) {
       const [content, metaString, linksString, scriptsString] = await Promise.all([
@@ -236,30 +237,18 @@ export async function PUT(request: NextRequest) {
       const links = JSON.parse(linksString);
       const scripts = JSON.parse(scriptsString);
 
-      if (!updating.has(lockKey)) {
-        updating.add(lockKey);
-        _fetchContent(pathToFetch, cacheFilePath)
-          .catch(console.error)
-          .finally(() => updating.delete(lockKey));
-      }
+      fetchAtMostOncePerHour(key, () => _fetchContent(pathToFetch, cacheFilePath)).catch(console.error);
 
       return NextResponse.json({ content, meta, links, scripts }, { status: 200 });
     }
 
-    if (locks.has(lockKey)) {
-      const data = await locks.get(lockKey)!;
-      return NextResponse.json(data, { status: 200 });
+    const result = await fetchAtMostOncePerHour(key, () => _fetchContent(pathToFetch, cacheFilePath));
+
+    if (!result.ok) {
+      throw new Error("Fetch failed");
     }
 
-    const fetchPromise = _fetchContent(pathToFetch, cacheFilePath);
-    locks.set(lockKey, fetchPromise);
-
-    try {
-      const data = await fetchPromise;
-      return NextResponse.json(data, { status: 200 });
-    } finally {
-      locks.delete(lockKey);
-    }
+    return NextResponse.json(result.data, { status: 200 });
   } catch (reason) {
     console.error(reason);
     const message = reason instanceof Error ? reason.message : "Unexpected exception";
