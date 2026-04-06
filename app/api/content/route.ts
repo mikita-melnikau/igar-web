@@ -12,13 +12,6 @@ const CACHE_DIR = join(process.cwd(), "cache");
 const locks = new Map<string, Promise<ContentResponse>>();
 const updating = new Set<string>();
 
-const contentFix = (content?: string): string => {
-  if (!content) {
-    return "";
-  }
-  return content.replace(/россии/gi, "Беларуси").replace(/россия/gi, "Беларусь");
-};
-
 const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promise<ContentResponse> => {
   const p = pathToFetch || "";
   const pageAddress = config.SOURCE_WEBSITE + p;
@@ -212,16 +205,15 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
 
   const body = document.querySelector("body");
   const serializedBody = body?.innerHTML ?? "<h1>Body is empty</h1>";
-  const fixedContent = contentFix(serializedBody);
 
   await Promise.all([
-    writeFile(cacheFilePath + ".html", fixedContent, "utf-8"),
+    writeFile(cacheFilePath + ".html", serializedBody, "utf-8"),
     writeFile(cacheFilePath + ".json", JSON.stringify(pageMeta), "utf-8"),
     writeFile(cacheFilePath + ".links.json", JSON.stringify(linksArray), "utf-8"),
     writeFile(cacheFilePath + ".scripts.json", JSON.stringify(scriptsArray), "utf-8"),
   ]);
 
-  return { content: fixedContent, links: linksArray, meta: pageMeta, scripts: scriptsArray };
+  return { content: serializedBody, links: linksArray, meta: pageMeta, scripts: scriptsArray };
 };
 
 export async function PUT(request: NextRequest) {
