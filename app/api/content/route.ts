@@ -100,7 +100,7 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
 
   // meta
   const titleNode = document.querySelector("title");
-  const title = contentFix(titleNode?.textContent);
+  const title = titleNode?.textContent;
   const metaElements = document.querySelectorAll("meta");
   const metaData = Array.from(metaElements).map((meta) => ({
     name: meta.getAttribute("name") || "",
@@ -109,9 +109,9 @@ const _fetchContent = async (pathToFetch: string, cacheFilePath: string): Promis
     httpEquiv: meta.getAttribute("http-equiv") || "",
     charset: meta.getAttribute("charset") || "",
   }));
-  const description = contentFix(metaData.find((m) => m.name === "description")?.content);
-  const keywords = contentFix(metaData.find((m) => m.name === "keywords")?.content);
-  const pageMeta = { title, description, keywords };
+  const description = metaData.find((m) => m.name === "description")?.content;
+  const keywords = metaData.find((m) => m.name === "keywords")?.content;
+  const pageMeta = { title: title ?? "", description: description ?? "", keywords: keywords ?? "" };
 
   // header
   const authBtn = document.querySelector(".header__account-link");
