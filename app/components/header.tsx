@@ -40,7 +40,7 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
 
       <div className={"bg-white border-b py-2  border-gray-200 "}>
         <div className={"container-2025"}>
-          <p className={"text-xs mb-0! "}>
+          <p className={"text-xs mb-0!"}>
             <strong>ООО &#34;АБ Маркет&#34;</strong> , Беларусь <br />{" "}
           </p>
           <div className={"flex md:justify-between md:flex-row flex-col  text-xs md:gap-5"}>
@@ -62,6 +62,16 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
               , Россия — производитель ковров, штор и др. в России
             </p>
           </div>
+        </div>
+      </div>
+
+      <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 "}>
+        <div className={"container-2025 text-xs flex flex-col md:flex-row gap-1 items-start"}>
+          <strong>ВНИМАНИЕ!</strong>
+          <p className={"mb-0!"}>
+            На сайте указаны цены наших партнеров для реализации на внутреннем рынке Российской Федерации, справочно.{" "}
+            <br /> Для реализации в Республике Беларусь расчет цен производится отдельно!
+          </p>
         </div>
       </div>
 
