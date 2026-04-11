@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --ab-primary: #009399;
+  --ab-primary-hover: #44aaae;
 }
 
 body {
