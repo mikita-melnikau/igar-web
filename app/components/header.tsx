@@ -11,7 +11,7 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
 
   return (
     <>
-      <header className={"sticky top-0 left-0 w-full z-50 bg-white py-4"}>
+      <header className={"sticky top-0 left-0 w-full z-50  border-b  border-gray-200 bg-white py-4"}>
         <div className={"container-2025 flex justify-between items-center"}>
           <div className={"flex gap-1 sm:gap-5 items-center"}>
             <div className="header__menu-open" aria-label="Открыть меню"></div>
@@ -38,40 +38,43 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
         </div>
       </header>
 
-      <div className={"bg-white border-b py-2  border-gray-200 "}>
-        <div className={"container-2025"}>
-          <p className={"text-xs mb-0!"}>
-            <strong>ООО &#34;АБ Маркет&#34;</strong> , Беларусь <br />{" "}
-          </p>
-          <div className={"flex md:justify-between md:flex-row flex-col  text-xs md:gap-5"}>
-            <p className={"mb-0! flex-1 leading-relaxed"}>
-              <strong>
-                Предлагаем комплексные решения по продаже и укладке (замене) коммерческих ковровых покрытий.
-              </strong>{" "}
-              Официальный дистрибьютор фабрики «Нева Тафт» по коммерческим ковровым покрытиям в РБ.
-            </p>
-            <p className={"mb-0! leading-relaxed"}>
-              <strong> Наши партнеры:</strong> <br />{" "}
-              <Link href="https://nevatuft.ru/" className={"text-inherit! border-b-0! !underline"} target={"_blank"}>
-                Фабрика «Нева Тафт»
-              </Link>{" "}
-              , Россия — крупнейший производитель ковровых покрытий в ЕАЭС, <br />
-              <Link className={"text-inherit!  border-b-0! !underline"} href="https://velvet-pro.ru/" target={"_blank"}>
-                ООО «Велвис Про»
-              </Link>{" "}
-              , Россия — производитель ковров, штор и др. в России
-            </p>
-          </div>
-        </div>
-      </div>
+      {/*<div className={"bg-white border-b  border-gray-200 "}>*/}
+      {/*  <div className={"container-2025"}>*/}
+      {/*    <p className={"text-xs mb-0!"}>*/}
+      {/*      <strong>ООО &#34;АБ Маркет&#34;</strong> , Беларусь <br />{" "}*/}
+      {/*    </p>*/}
+      {/*    <div className={"flex md:justify-between md:flex-row flex-col  text-xs md:gap-5"}>*/}
+      {/*      <p className={"mb-0! flex-1 leading-relaxed"}>*/}
+      {/*        <strong>*/}
+      {/*          Предлагаем комплексные решения по продаже и укладке (замене) коммерческих ковровых покрытий.*/}
+      {/*        </strong>{" "}*/}
+      {/*        Официальный дистрибьютор фабрики «Нева Тафт» по коммерческим ковровым покрытиям в РБ.*/}
+      {/*      </p>*/}
+      {/*      <p className={"mb-0! leading-relaxed"}>*/}
+      {/*        <strong> Наши партнеры:</strong> <br />{" "}*/}
+      {/*        <Link href="https://nevatuft.ru/" className={"text-inherit! border-b-0! !underline"} target={"_blank"}>*/}
+      {/*          Фабрика «Нева Тафт»*/}
+      {/*        </Link>{" "}*/}
+      {/*        , Россия — крупнейший производитель ковровых покрытий в ЕАЭС, <br />*/}
+      {/*        <Link className={"text-inherit!  border-b-0! !underline"} href="https://velvet-pro.ru/" target={"_blank"}>*/}
+      {/*          ООО «Велвис Про»*/}
+      {/*        </Link>{" "}*/}
+      {/*        , Россия — производитель ковров, штор и др. в России*/}
+      {/*      </p>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
-      <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 "}>
-        <div className={"container-2025 text-xs flex flex-col md:flex-row gap-1 items-start"}>
-          <strong>ВНИМАНИЕ!</strong>
-          <p className={"mb-0!"}>
-            На сайте указаны цены наших партнеров для реализации на внутреннем рынке Российской Федерации, справочно.{" "}
-            <br /> Для реализации в Республике Беларусь расчет цен производится отдельно!
-          </p>
+      <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile"}>
+        <div className={"container-2025 text-xs flex flex-wrap"}>
+          <span>
+            <strong> ООО &#34;АБ Маркет&#34; </strong>является официальным представителем фабрики &#34;Нева Тафт&#34; -
+            крупнейшего производителя ковровых покрытий в ЕАЭС,
+          </span>
+          <span>
+            а также представителем ООО &#34;Вельвет Про&#34; - ведущего производителя ковров и штор под заказ в
+            Российской Федерации.
+          </span>
         </div>
       </div>
 
