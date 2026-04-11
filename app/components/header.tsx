@@ -9,19 +9,22 @@ interface AppHeaderProps {
 export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
   const clean = DOMPurify.sanitize(headerNavbar);
 
+  /*
+    Иконка Белорусь:
+    <div className="flex items-center gap-1 text-xs hide-on-mobile">
+      <Image src={"/geo.svg"} alt={"Geo"} width={15} height={15} />
+      Беларусь
+    </div>
+   */
   return (
     <>
       <header className={"sticky top-0 left-0 w-full z-50  border-b  border-gray-200 bg-white"}>
         <div className={"container-2025 flex justify-between items-center"}>
-          <div className={"flex gap-1 sm:gap-5 items-center"}>
+          <div className="flex gap-2 items-center">
             <div className="header__menu-open" aria-label="Открыть меню"></div>
             <Link href={"/"} className={"border-b-0!"}>
               <Image src={"/logo.jpg"} alt={"logo"} width={162} height={70} />
             </Link>
-            <div className="flex items-center gap-1 text-xs hide-on-mobile">
-              <Image src={"/geo.svg"} alt={"Geo"} width={15} height={15} />
-              Беларусь
-            </div>
           </div>
           <div className={"flex sm:gap-2 sm:items-center sm:flex-row flex-col"}>
             <Link
