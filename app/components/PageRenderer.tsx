@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { AppSafeContent } from "@/app/components/content";
 import { fetchPageData } from "@/app/lib/page-data";
-import { AppHeader } from "@/app/components/header";
+import { AppHeader } from "@/app/components/Header/header";
 
 interface PageRendererProps {
   path: string;
