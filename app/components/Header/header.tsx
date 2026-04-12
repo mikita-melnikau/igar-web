@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
+import { HeaderLogo } from "@/app/components/Header/HeaderLogo";
 
 interface AppHeaderProps {
   headerNavbar: string;
@@ -21,10 +21,8 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
       <header className={"sticky top-0 left-0 w-full z-50  border-b  border-gray-200 bg-white"}>
         <div className={"container-2025 flex justify-between items-center"}>
           <div className="flex gap-2 items-center">
-            <div className="header__menu-open" aria-label="Открыть меню"></div>
-            <Link href={"/"} className={"border-b-0!"}>
-              <Image src={"/logo.jpg"} alt={"logo"} width={162} height={70} />
-            </Link>
+            <div className="header__menu-open mr-0!" aria-label="Открыть меню"></div>
+            <HeaderLogo />
           </div>
           <div className={"flex sm:gap-2 sm:items-center sm:flex-row flex-col"}>
             <Link
