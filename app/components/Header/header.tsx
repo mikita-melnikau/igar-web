@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
+import { HeaderLogo } from "@/app/components/Header/HeaderLogo";
 
 interface AppHeaderProps {
   headerNavbar: string;
@@ -9,17 +9,20 @@ interface AppHeaderProps {
 export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
   const clean = DOMPurify.sanitize(headerNavbar);
 
+  /*
+    Иконка Белорусь:
+    <div className="flex items-center gap-1 text-xs hide-on-mobile">
+      <Image src={"/geo.svg"} alt={"Geo"} width={15} height={15} />
+      Беларусь
+    </div>
+   */
   return (
     <>
-      <header className={"sticky top-0 left-0 w-full z-50  border-b  border-gray-200 bg-white py-4"}>
+      <header className={"sticky top-0 left-0 w-full z-50  border-b  border-gray-200 bg-white"}>
         <div className={"container-2025 flex justify-between items-center"}>
-          <div className={"flex gap-1 sm:gap-5 items-center"}>
-            <div className="header__menu-open" aria-label="Открыть меню"></div>
-            <Image src={"/logo.svg"} alt={"logo"} width={125} height={48} />
-            <div className="flex items-center gap-1 text-xs hide-on-mobile">
-              <Image src={"/geo.svg"} alt={"Geo"} width={15} height={15} />
-              Беларусь
-            </div>
+          <div className="flex gap-2 items-center">
+            <div className="header__menu-open mr-0!" aria-label="Открыть меню"></div>
+            <HeaderLogo />
           </div>
           <div className={"flex sm:gap-2 sm:items-center sm:flex-row flex-col"}>
             <Link
@@ -68,18 +71,24 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
       <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile"}>
         <div className={"container-2025 text-xs flex flex-wrap"}>
           <span>
-            <strong> ООО &#34;АБ Маркет&#34; </strong>является официальным представителем фабрики &#34;Нева Тафт&#34; -
-            крупнейшего производителя ковровых покрытий в ЕАЭС,
+            <strong> ООО &#34;АБ Маркет&#34; </strong>является официальным представителем фабрики{" "}
+            <Link href="https://nevatuft.ru/" className={"text-inherit! border-b-0! !underline"} target={"_blank"}>
+              &#34;Нева Тафт&#34;
+            </Link>{" "}
+            - крупнейшего производителя ковровых покрытий в ЕАЭС,
           </span>
           <span>
-            а также представителем ООО &#34;Вельвет Про&#34; - ведущего производителя ковров и штор под заказ в
-            Российской Федерации.
+            а также представителем{" "}
+            <Link className={"text-inherit!  border-b-0! !underline"} href="https://velvet-pro.ru/" target={"_blank"}>
+              ООО &#34;Вельвет Про&#34;
+            </Link>{" "}
+            - ведущего производителя ковров и штор под заказ в Российской Федерации.
           </span>
         </div>
       </div>
 
       <div
-        className={"sticky left-0 top-[69px] z-50 bg-white"}
+        className={"sticky left-0 top-[65px] z-50 bg-white"}
         style={{ maxWidth: "100vw" }}
         dangerouslySetInnerHTML={{ __html: clean }}
       />
