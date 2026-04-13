@@ -13,4 +13,10 @@ type Script = {
   async: boolean;
 };
 
-export type ContentResponse = { content: string; meta: PageMetadata; links: HeadLink[]; scripts: Script[] };
+export type ContentResponse = {
+  content: string;
+  meta: PageMetadata;
+  links: HeadLink[];
+  scripts: Script[];
+  headerNavbar: string;
+};

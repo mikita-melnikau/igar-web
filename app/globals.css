@@ -10,9 +10,17 @@ body {
   color: var(--foreground);
 }
 
-@media (max-width: 756px) {
-    .header-custom-block {
-        height: 57px;
-        visibility: hidden;
+
+@media (max-width: 600px) {
+    /*Не убирать, сломается верстка на телефоне*/
+    .header__inner {
+        display: none !important;
     }
 }
+
+@media (max-width: 640px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+}
+
