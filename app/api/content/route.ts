@@ -86,7 +86,8 @@ const _fetchContent = async (
     linksArray.push(mappedLink);
   }
 
-  if (isCssCollection) {
+  const isHomePage = !p || p === "/";
+  if (isHomePage && isCssCollection) {
     await customCssService.readCssAndReplaceColors(linksArray);
   }
 
