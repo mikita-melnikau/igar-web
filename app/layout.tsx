@@ -1,6 +1,6 @@
 import "./globals.css";
 import { PriceObserver } from "@/app/components/PriceObserver";
-import { NextCssCollector } from "@/app/components/NextCssCollector";
+import { ColorFixer } from "@/app/components/ColorFixer";
 import { getRubToBynRate } from "@/app/lib/rub-to-byn-rate";
 
 const RootLayout = async ({
@@ -17,7 +17,7 @@ const RootLayout = async ({
       </head>
       <body id="ab-market">{children}</body>
       <PriceObserver rubToBynRate={rubToBynRate} />
-      <NextCssCollector />
+      <ColorFixer />
     </html>
   );
 };

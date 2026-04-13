@@ -7,7 +7,7 @@ import { config } from "@/config";
  * Component to collect all nuxt css styles
  * NOTE: You must set "?ab=15" in page address
  */
-export const NextCssCollector = () => {
+export const ColorFixer = () => {
   const sentRef = useRef(false);
 
   const redirectDelaySec = useMemo(() => {
@@ -45,7 +45,7 @@ export const NextCssCollector = () => {
           .forEach((link) => nextCssSet.add(link.split("?")[0]));
         const nextCss = [...nextCssSet];
         if (!nextCss.length) {
-          window.alert(`NextCssCollector: CSS не найдены`);
+          window.alert(`Css Collector: CSS не найдены`);
           return;
         }
         await fetch("/api/css-collect", {
@@ -85,7 +85,7 @@ export const NextCssCollector = () => {
     return () => window.clearInterval(interval);
   }, [redirectDelaySec]);
 
-  return secondsLeft ? <div style={bannerStyle}>Сборка Next CSS. Перезагрузка через {secondsLeft} сек.</div> : null;
+  return secondsLeft ? <div style={bannerStyle}>Сборка CSS. Перезагрузка через {secondsLeft} сек.</div> : null;
 };
 
 const bannerStyle: React.CSSProperties = {
