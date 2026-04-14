@@ -20,13 +20,9 @@ class PartnersPageService {
   }
 
   async fetch(pathFromBody: string): Promise<ContentResponse> {
-    console.log(33333);
     const cachedResult = await this.fileCache.get(pathFromBody);
-    console.log(1111111);
     if (cachedResult) {
-      console.log(222222);
       this.inFlightRequest.fetch(pathFromBody, cachedResult); // @IMPORTANT: No await!
-      console.log(cachedResult.headerNavbar);
       return cachedResult;
     }
     return await this.inFlightRequest.fetch(pathFromBody);

@@ -139,17 +139,17 @@ export class ContentService {
     if (!header) {
       return "";
     }
+    const headerTop = header.querySelector(".header__top");
+    headerTop?.remove();
+
     const innerHeader = header.querySelector(".header__inner")?.outerHTML ?? "";
     const headerMobile = header.querySelector(".header-mobile")?.outerHTML ?? "";
     const headerMobileOverlay = header.querySelector(".header-mobile-overlay")?.outerHTML ?? "";
 
-    const headerTop = header.querySelector(".header__top");
-    headerTop?.remove();
+    const fixedHeader = innerHeader + headerMobile + headerMobileOverlay;
 
-    if (cachedHeader) {
-      return cachedHeader;
-    }
-    return innerHeader + headerMobile + headerMobileOverlay;
+    header.remove();
+    return cachedHeader || fixedHeader;
   }
 
   /* ======================
