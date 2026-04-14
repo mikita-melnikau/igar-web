@@ -11,6 +11,6 @@ export const fetchPageData = async (pathToFetch: string): Promise<ContentRespons
   const options = { method: "PUT", body, next: { revalidate: revalidationFrequency } };
   const baseUrl = await getSsrBaseUrl();
   const ending = buildId ? `?build-id=${buildId}` : "";
-  const response = await fetch(`${baseUrl}/api/content${ending}`, options);
+  const response = await fetch(`${baseUrl}/api/ab-content${ending}`, options);
   return response.json();
 };

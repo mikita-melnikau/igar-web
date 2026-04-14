@@ -7,7 +7,7 @@ import { useIsMobile } from "@/src/hooks/useIsMobile";
 export const HeaderLogo = () => {
   const { isMobile } = useIsMobile();
 
-  const logo = <Image src={"/logo.jpg"} alt={"logo"} width={162} height={70} />;
+  const logo = <Image src={"/ab-market/logo.jpg"} alt={"logo"} width={162} height={70} />;
 
   return isMobile ? (
     logo

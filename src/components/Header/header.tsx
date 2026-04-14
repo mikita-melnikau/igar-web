@@ -12,7 +12,7 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
   /*
     Иконка Белорусь:
     <div className="flex items-center gap-1 text-xs hide-on-mobile">
-      <Image src={"/geo.svg"} alt={"Geo"} width={15} height={15} />
+      <Image src={"/ab-market/geo.svg"} alt={"Geo"} width={15} height={15} />
       Беларусь
     </div>
    */
