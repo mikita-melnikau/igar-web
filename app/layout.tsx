@@ -23,7 +23,9 @@ const RootLayout = async ({
   return (
     <html lang="ru">
       <head></head>
-      <body className={`${montserrat.className} ${roboto.className}`}>{children}</body>
+      <body className={`${montserrat.className} ${roboto.className}`} id="ab-market">
+        {children}
+      </body>
     </html>
   );
 };
