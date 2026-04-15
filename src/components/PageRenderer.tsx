@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchPageData } from "@/src/lib/client/page-data";
-import { AppPageScripts } from "@/src/PageScripts";
+import { AppPageScripts } from "./PageScripts";
 import { AppHeader } from "./Header/header";
 import { AppSafeContent } from "./content";
 
