@@ -3,8 +3,18 @@ import { config } from "@/config";
 import { removeDomain } from "@/src/helpers/proxy/proxy.heplers";
 import type { NextRequest } from "next/server";
 
-const BYPASS_PREFIXES = ["/ab-market", "/api/ab-content", "/public/ab-market", "/favicon.ico"];
+const BYPASS_PREFIXES = [
+  "/ab-market",
+  "/api/ab-content",
+  "/public/ab-market",
+  "/favicon.ico",
+  "/icon.png",
+  "/apple-icon.png",
+  "/.well-known/appspecific/com.chrome.devtools.json",
+];
+
 const BLOCKED_PATHS = new Set(["/sitemap.xml", "/robots.txt"]);
+
 const ASSET_PREFIXES = ["/upload/", "/local/templates/", "/public", "/static", "/img", "/api", "/ajax"];
 
 export function proxy(request: NextRequest) {

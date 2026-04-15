@@ -83,6 +83,9 @@ export class ContentService {
       if (!link.rel || !link.href) {
         continue;
       }
+      if (/icon/i.test(link.rel)) {
+        continue;
+      }
       const mappedLink = {
         rel: link.rel,
         href: link.href,
