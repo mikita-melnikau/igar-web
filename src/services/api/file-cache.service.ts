@@ -62,4 +62,18 @@ export class FileCacheService {
       await writeFile(this.headerFile, data.headerNavbar, "utf-8");
     }
   }
+
+  /* ======================
+     CSS
+  ====================== */
+
+  private PUBLIC_DIR = join(process.cwd(), "public", "ab-market");
+
+  get partnersStylesFile(): string {
+    return join(this.PUBLIC_DIR, "partners.bundle.css");
+  }
+
+  public async savePartnersStyles(css: string): Promise<void> {
+    await writeFile(this.partnersStylesFile, css, "utf-8");
+  }
 }

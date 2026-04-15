@@ -60,6 +60,9 @@ const eslintConfig = defineConfig([
       "react/function-component-definition": ["warn", { namedComponents: "arrow-function" }],
       "react/no-unused-prop-types": "error",
       "react/display-name": "off",
+
+      // nextjs
+      "@next/next/no-css-tags": "off",
     },
   },
   // Override default ignores of eslint-config-next.

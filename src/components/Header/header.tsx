@@ -87,11 +87,7 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
         </div>
       </div>
 
-      <div
-        className={"sticky left-0 top-[65px] z-50 bg-white"}
-        style={{ maxWidth: "100vw", background: "orange" }}
-        dangerouslySetInnerHTML={{ __html: clean }}
-      />
+      <div className={"sticky left-0 top-[65px] z-50 bg-white"} dangerouslySetInnerHTML={{ __html: clean }} />
     </>
   );
 };
