@@ -10,6 +10,11 @@ body {
   color: var(--foreground);
 }
 
+#ab-market main.main--white-bg,
+#ab-market .footer-2025 {
+    background: transparent;
+}
+
 
 @media (max-width: 600px) {
     /*Не убирать, сломается верстка на телефоне*/

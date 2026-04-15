@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { removeDomain } from "@/app/helpers/proxy.heplers";
+import { removeDomain } from "./proxy.heplers";
 
 describe("removeDomain", () => {
   it("should starts with /", async () => {

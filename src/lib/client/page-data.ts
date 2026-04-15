@@ -1,5 +1,5 @@
-import { getSsrBaseUrl } from "@/app/helpers/request.helpers";
-import type { ContentResponse } from "@/app/types";
+import { getSsrBaseUrl } from "@/src/helpers/client/request.helpers";
+import type { ContentResponse } from "@/src/types";
 
 const buildId = process.env.BUILD_ID;
 
@@ -11,6 +11,6 @@ export const fetchPageData = async (pathToFetch: string): Promise<ContentRespons
   const options = { method: "PUT", body, next: { revalidate: revalidationFrequency } };
   const baseUrl = await getSsrBaseUrl();
   const ending = buildId ? `?build-id=${buildId}` : "";
-  const response = await fetch(`${baseUrl}/api/content${ending}`, options);
+  const response = await fetch(`${baseUrl}/api/ab-content${ending}`, options);
   return response.json();
 };

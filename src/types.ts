@@ -1,11 +1,12 @@
 export type PageMetadata = { title: string; description: string; keywords: string };
 
-type HeadLink = {
+export type HeadLink = {
   rel: string;
   href: string;
   type: string;
 };
-type Script = {
+
+export type CachedScript = {
   src: string;
   innerHTML: string;
   type: string;
@@ -17,6 +18,6 @@ export type ContentResponse = {
   content: string;
   meta: PageMetadata;
   links: HeadLink[];
-  scripts: Script[];
+  scripts: CachedScript[];
   headerNavbar: string;
 };

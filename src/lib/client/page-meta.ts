@@ -1,4 +1,4 @@
-import { fetchPageData } from "@/app/lib/page-data";
+import { fetchPageData } from "./page-data";
 import type { Metadata } from "next";
 
 export type PageProps = {

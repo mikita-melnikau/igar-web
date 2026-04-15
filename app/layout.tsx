@@ -1,5 +1,28 @@
 import "./globals.css";
 
+import { Montserrat, Roboto, Inter } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
+
+const roboto = Roboto({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "700", "900"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-roboto",
+});
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 const RootLayout = async ({
   children,
 }: Readonly<{
@@ -7,8 +30,12 @@ const RootLayout = async ({
 }>) => {
   return (
     <html lang="ru">
-      <head></head>
-      <body>{children}</body>
+      <head>
+        <link rel="stylesheet" href="/ab-market/partners.bundle.css" />
+      </head>
+      <body id="ab-market" className={`${inter.className} ${roboto.className} ${montserrat.className}`}>
+        {children}
+      </body>
     </html>
   );
 };

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
-import { PageRenderer } from "@/app/components/PageRenderer";
-import { setPageMeta } from "@/app/lib/page-meta";
-import type { PageProps } from "@/app/lib/page-meta";
+import { PageRenderer } from "@/src/components/PageRenderer";
+import { setPageMeta } from "@/src/lib/client/page-meta";
+import type { PageProps } from "@/src/lib/client/page-meta";
 import type { Metadata } from "next";
 
 export async function generateMetadata(pageProps: PageProps): Promise<Metadata> {
