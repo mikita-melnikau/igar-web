@@ -51,6 +51,7 @@ jobs:
           script: |
             set -e
             cd /var/www/app
+            rm -rf cache/* 
             rm -rf .next public server.js node_modules package.json
             tar -xzf build.tar.gz
             rm -f build.tar.gz
