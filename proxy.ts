@@ -5,8 +5,9 @@ import type { NextRequest } from "next/server";
 
 const BYPASS_PREFIXES = [
   "/ab-market",
-  "/api/ab-content",
   "/public/ab-market",
+  "/api/ab-content",
+  "/api/ab-styles",
   "/favicon.ico",
   "/icon.png",
   "/apple-icon.png",

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchPageData } from "@/src/lib/client/page-data";
+import { PartnersCssLoader } from "@/src/components/PartnersCssLoader";
 import { AppPageScripts } from "./PageScripts";
 import { AppHeader } from "./Header/header";
 import { AppSafeContent } from "./content";
@@ -17,9 +18,13 @@ export const PageRenderer = async ({ path }: PageRendererProps) => {
 
   return (
     <>
-      {links?.map((link, index) => (
-        <link key={index} rel={link.rel} href={link.href} type={link.type} />
-      ))}
+      {links?.map((link, index) =>
+        /css\/style\.bundle\.css/.test(link.href) ? (
+          <PartnersCssLoader key={index + link.href} href={link.href} />
+        ) : (
+          <link key={index + link.href} rel={link.rel} href={link.href} type={link.type} />
+        ),
+      )}
 
       <AppHeader headerNavbar={headerNavbar} />
       <AppSafeContent html={content} />
