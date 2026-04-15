@@ -1,17 +1,10 @@
 import "./globals.css";
 
-import { Montserrat, Roboto } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "700", "900"],
-  display: "swap",
-});
-
-const roboto = Roboto({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "700", "900"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -23,7 +16,7 @@ const RootLayout = async ({
   return (
     <html lang="ru">
       <head></head>
-      <body className={`${montserrat.className} ${roboto.className}`} id="ab-market">
+      <body id="ab-market" className={`${montserrat.className}`}>
         {children}
       </body>
     </html>
