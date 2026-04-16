@@ -22,7 +22,9 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
         <div className={"container-2025 flex justify-between items-center"}>
           <div className="flex gap-2 items-center">
             <div className="header__menu-open mr-0!" aria-label="Открыть меню"></div>
-            <HeaderLogo />
+            <div className={"app-logo"}>
+              <HeaderLogo />
+            </div>
           </div>
           <div className={"flex sm:gap-2 sm:items-center sm:flex-row flex-col"}>
             <Link

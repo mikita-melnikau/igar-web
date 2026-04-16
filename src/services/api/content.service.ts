@@ -53,6 +53,7 @@ export class ContentService {
   ====================== */
 
   private fixPageContent(document: Document) {
+    const body = document.querySelector("body");
     const featuresBlock = document.querySelector(".features-section-2025");
     if (featuresBlock) {
       featuresBlock.remove();
@@ -65,6 +66,15 @@ export class ContentService {
       div.appendChild(nevaBlock);
 
       main.insertAdjacentElement("afterbegin", div);
+    }
+    if (body) {
+      const greenLineWrapper = document.createElement("div");
+      greenLineWrapper.classList.add("app-green-line-wrapper");
+      const greenLineDiv = document.createElement("div");
+      greenLineDiv.classList.add("app-green-line");
+      greenLineDiv.classList.add("container-2025");
+      greenLineWrapper.appendChild(greenLineDiv);
+      body.prepend(greenLineWrapper);
     }
   }
 

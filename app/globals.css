@@ -29,3 +29,47 @@ body {
     }
 }
 
+:root {
+    --1px: 1px;
+    --logo-width: 162px;
+    --logo-left-offset: 57px;
+    --logo-round-offset: 57px;
+    --logo-color: #009399;
+}
+
+/*@media (max-width: 768px) {*/
+/*    :root {*/
+/*        --logo-width: 80px;*/
+/*    }*/
+/*}*/
+
+
+#ab-market .app-green-line-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#ab-market .container-2025.app-green-line {
+    opacity: 1;
+    background: linear-gradient(
+            to right,
+            transparent calc(var(--logo-round-offset) - var(--1px)),
+            var(--logo-color) calc(var(--logo-round-offset)),
+            var(--logo-color) calc(var(--logo-round-offset) + var(--logo-width)),
+            transparent calc(var(--logo-round-offset) + var(--logo-width) + var(--1px))
+    );
+}
+
+#ab-market .app-logo {
+    width: calc(var(--logo-width) + var(--logo-round-offset));
+    padding-left: var(--logo-round-offset);
+}
+
+#ab-market .container-2025 {
+    opacity: 0.9;
+}
