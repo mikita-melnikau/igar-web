@@ -1,4 +1,4 @@
-name: Allow only develop/hotfix -> main
+name: only-dev-or-hotfix-to-main
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  check:
+  only-dev-or-hotfix-to-main:
     runs-on: ubuntu-latest
     steps:
       - name: Validate source branch
