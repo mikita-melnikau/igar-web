@@ -46,17 +46,25 @@ export class InFlightRequestService {
     if (existing && cachedValue) {
       return cachedValue;
     }
-    if (existing) {
-      return await existing;
+    try {
+      if (existing) {
+        return await existing;
+      }
+      const composition = async () => {
+        const html = await this.fetchContent(pathFromBody);
+        const content = this.contentService.parseHtml(html, cachedValue?.headerNavbar);
+        await this.fileCache.store(pathFromBody, content);
+        return content;
+      };
+      const promise = composition();
+      this.inFlight.set(key, promise);
+      return await promise.finally(() => this.inFlight.delete(key));
+    } catch (error: unknown) {
+      console.error(error);
+      if (cachedValue) {
+        return cachedValue;
+      }
+      throw error;
     }
-    const composition = async () => {
-      const html = await this.fetchContent(pathFromBody);
-      const content = this.contentService.parseHtml(html, cachedValue?.headerNavbar);
-      await this.fileCache.store(pathFromBody, content);
-      return content;
-    };
-    const promise = composition();
-    this.inFlight.set(key, promise);
-    return await promise.finally(() => this.inFlight.delete(key));
   }
 }

@@ -43,20 +43,24 @@ export class InFlightStylesService {
     if (now < this.nextFetchIn) {
       return;
     }
-    if (this.inFlight) {
-      return await this.inFlight;
-    }
-    const composition = async () => {
-      const styles = await this.fetchContent(pathFromBody);
-      const sanitized = this.sanitizeCss(styles);
-      await this.fileCache.savePartnersStyles(sanitized);
-    };
-    const promise = composition();
-    this.inFlight = promise;
+    try {
+      if (this.inFlight) {
+        return await this.inFlight;
+      }
+      const composition = async () => {
+        const styles = await this.fetchContent(pathFromBody);
+        const sanitized = this.sanitizeCss(styles);
+        await this.fileCache.savePartnersStyles(sanitized);
+      };
+      const promise = composition();
+      this.inFlight = promise;
 
-    await promise.finally(() => {
-      this.inFlight = null;
-      this.nextFetchIn = now + 24 * 60 * 1000;
-    });
+      await promise.finally(() => {
+        this.inFlight = null;
+        this.nextFetchIn = now + 24 * 60 * 1000;
+      });
+    } catch (error: unknown) {
+      console.error(error);
+    }
   }
 }
