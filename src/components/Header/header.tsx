@@ -70,7 +70,7 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
       {/*  </div>*/}
       {/*</div>*/}
 
-      <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile"}>
+      <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile relative"}>
         <div className={"container-2025 text-xs flex flex-wrap"}>
           <span>
             <strong> ООО &#34;АБ Маркет&#34; </strong>является официальным представителем фабрики{" "}

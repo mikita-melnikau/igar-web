@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import { Montserrat, Roboto, Inter } from "next/font/google";
+import { AppGreenLine } from "@/src/components/AppGreenLine";
 
 const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
@@ -34,7 +35,8 @@ const RootLayout = async ({
         <link rel="stylesheet" href="/ab-market/partners.bundle.css" />
       </head>
       <body id="ab-market" className={`${inter.className} ${roboto.className} ${montserrat.className}`}>
-        {children}
+        <AppGreenLine />
+        <div>{children}</div>
       </body>
     </html>
   );

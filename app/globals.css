@@ -29,6 +29,8 @@ body {
     }
 }
 
+/* Green line styles   */
+
 :root {
     --1px: 1px;
     --logo-width: 162px;
@@ -47,12 +49,6 @@ body {
     justify-content: center;
 }
 
-@media (max-width: 756px) {
-    #ab-market .app-green-line-wrapper {
-        display: none;
-    }
-}
-
 #ab-market .container-2025.app-green-line {
     opacity: 1;
     background: linear-gradient(
@@ -69,6 +65,21 @@ body {
     padding-left: var(--logo-round-offset);
 }
 
-#ab-market .container-2025 {
+#ab-market .container-2025,
+#ab-market .have-questions-section-2025 {
     opacity: 0.9;
+}
+
+#ab-market footer {
+    position: relative;
+}
+
+@media (max-width: 756px) {
+    #ab-market .app-green-line-wrapper {
+        display: none;
+    }
+    #ab-market .container-2025,
+    #ab-market .have-questions-section-2025 {
+        opacity: 1;
+    }
 }
