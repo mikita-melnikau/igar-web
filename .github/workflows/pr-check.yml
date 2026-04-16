@@ -1,4 +1,4 @@
-name: Test and Validate
+name: test-and-validate
 
 permissions:
   contents: read
@@ -11,12 +11,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  validate:
-    if: |
-      !(
-        (github.base_ref == 'develop' && github.head_ref == 'main') ||
-        (github.base_ref == 'main' && github.head_ref == 'develop')
-      )
+  test-and-validate:
     runs-on: ubuntu-latest
 
     steps:

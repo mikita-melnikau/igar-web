@@ -1,4 +1,4 @@
-name: Allow only stage -> develop
+name: only-stage-or-main-to-develop
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  check-source-branch:
+  only-stage-or-main-to-develop:
     runs-on: ubuntu-latest
     steps:
       - name: Fail unless PR comes from stage
