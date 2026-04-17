@@ -175,6 +175,11 @@ export class ContentService {
       mobileCopyrights.textContent = '© ООО "АБ Маркет" 2026';
     }
 
+    const linksToHide = header.querySelectorAll(
+      '[href="/shtory/"], [href="/kovry/"], [href="/blog/"], [href="/about/"], [href="/pridvernie-kovriki/"]',
+    );
+    linksToHide.forEach((link) => link.parentElement?.remove());
+
     const reshetkiLinks = header.querySelectorAll('[href="/reshetki/"]');
 
     reshetkiLinks.forEach((link) => {
