@@ -19,13 +19,18 @@ class PartnersPageService {
     return /\./.test(parts[parts.length - 1]);
   }
 
+  private pathTransformer(path: string) {
+    return !path || path === "/" ? "/kovrolin/" : path;
+  }
+
   async fetch(pathFromBody: string): Promise<ContentResponse> {
-    const cachedResult = await this.fileCache.get(pathFromBody);
+    const transformedPath = this.pathTransformer(pathFromBody);
+    const cachedResult = await this.fileCache.get(transformedPath);
     if (cachedResult) {
-      this.inFlightRequest.fetch(pathFromBody, cachedResult); // @IMPORTANT: No await!
+      this.inFlightRequest.fetch(transformedPath, cachedResult); // @IMPORTANT: No await!
       return cachedResult;
     }
-    return await this.inFlightRequest.fetch(pathFromBody);
+    return await this.inFlightRequest.fetch(transformedPath);
   }
 }
 
