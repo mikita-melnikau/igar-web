@@ -175,6 +175,12 @@ export class ContentService {
       mobileCopyrights.textContent = '© ООО "АБ Маркет" 2026';
     }
 
+    const reshetkiLinks = header.querySelectorAll('[href="/reshetki/"]');
+
+    reshetkiLinks.forEach((link) => {
+      link.textContent = "Грязезащитные решётки";
+    });
+
     const innerHeader = header.querySelector(".header__inner")?.outerHTML ?? "";
     const headerMobile = header.querySelector(".header-mobile")?.outerHTML ?? "";
     const headerMobileOverlay = header.querySelector(".header-mobile-overlay")?.outerHTML ?? "";
