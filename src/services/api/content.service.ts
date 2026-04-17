@@ -175,6 +175,14 @@ export class ContentService {
       mobileCopyrights.textContent = '© ООО "АБ Маркет" 2026';
     }
 
+    const links = header.querySelectorAll(
+      '[href="/shtory/"], [href="/kovry/"], [href="/blog/"], [href="/about/"], [href="/pridvernie-kovriki/"]',
+    );
+
+    links.forEach((link) => {
+      link.parentElement?.remove();
+    });
+
     const innerHeader = header.querySelector(".header__inner")?.outerHTML ?? "";
     const headerMobile = header.querySelector(".header-mobile")?.outerHTML ?? "";
     const headerMobileOverlay = header.querySelector(".header-mobile-overlay")?.outerHTML ?? "";

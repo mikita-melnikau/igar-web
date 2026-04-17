@@ -16,6 +16,7 @@ const BYPASS_PREFIXES = [
 
 const BLOCKED_PATHS = new Set(["/sitemap.xml", "/robots.txt"]);
 
+const NOT_FOUND_PATHS = ["/blog", "/about", "/shtory", "/kovry"];
 const ASSET_PREFIXES = ["/upload/", "/local/templates/", "/public", "/static", "/img", "/api", "/ajax"];
 
 export function proxy(request: NextRequest) {
@@ -27,6 +28,10 @@ export function proxy(request: NextRequest) {
 
   if (BYPASS_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     return NextResponse.next();
+  }
+
+  if (NOT_FOUND_PATHS.some((path) => pathname.startsWith(path))) {
+    return NextResponse.rewrite(new URL("/not-found-trigger", request.url));
   }
 
   if (BLOCKED_PATHS.has(pathname)) {
