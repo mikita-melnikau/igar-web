@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { PageRenderer } from "@/src/components/PageRenderer";
 import { setPageMeta } from "@/src/lib/client/page-meta";
 import type { PageProps } from "@/src/lib/client/page-meta";
@@ -8,7 +9,10 @@ export async function generateMetadata(pageProps: PageProps): Promise<Metadata> 
 }
 
 const PageComponent = async () => {
-  return <PageRenderer path={"/kovrolin"} />;
+  const h = await headers();
+  const currentUrl = h.get("x-url") ?? "";
+
+  return <PageRenderer path={currentUrl} />;
 };
 
 export default PageComponent;
