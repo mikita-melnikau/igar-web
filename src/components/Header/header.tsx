@@ -72,7 +72,7 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
         <div className={"container-2025 text-xs flex flex-wrap"}>
           <span>
             ООО &#34;АБ Маркет&#34;{" "}
-            <strong>является официальным официальным дистрибьютором по коммерческим ковровым покрытиям фабрики </strong>{" "}
+            <strong>является официальным дистрибьютором по коммерческим ковровым покрытиям фабрики </strong>{" "}
             <Link href="https://nevatuft.ru/" className={"text-inherit! border-b-0! !underline"} target={"_blank"}>
               &#34;Нева Тафт&#34;
             </Link>{" "}
