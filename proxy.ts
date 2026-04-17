@@ -25,6 +25,11 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // чтобы не было на / и /kovrolin одной и той же страницы с /kovrolin делаем редирект на /
+  if (pathname.startsWith("/kovrolin")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   if (BYPASS_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     return NextResponse.next();
   }
