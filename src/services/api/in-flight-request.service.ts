@@ -26,12 +26,10 @@ export class InFlightRequestService {
       },
     });
     if (result.status === 404) {
-      console.log(`[Error] ${pageAddress} - ${result.status}`);
-      throw new Error("Page not found");
+      throw new Error("Page not found (404 response)");
     }
     if (!result.ok) {
-      console.log(`[Error] ${pageAddress} - ${result.statusText}`);
-      throw new Error(`Failed to fetch: ${result.statusText}`);
+      throw new Error(`Failed to fetch (result !== ok): ${result.statusText}`);
     }
     return await result.text();
   }
@@ -65,7 +63,7 @@ export class InFlightRequestService {
       this.inFlight.set(key, promise);
       return await promise.finally(() => this.inFlight.delete(key));
     } catch (error: unknown) {
-      logger.error(`${logInfo} Fetch error`, { error });
+      logger.error(`${logInfo} Fetch error`, error);
       if (cachedValue) {
         return cachedValue;
       }

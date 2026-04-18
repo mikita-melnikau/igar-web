@@ -11,7 +11,6 @@ export async function PUT(request: NextRequest) {
     partnersStylesService.fetch(body.path); // @IMPORTANT: no await!
     return new NextResponse(null, { status: 204 });
   } catch (reason) {
-    console.error(reason);
     const message = reason instanceof Error ? reason.message : "Unexpected exception";
     const status = message === "Page not found" ? 404 : 500;
     return NextResponse.json({ error: message }, { status });

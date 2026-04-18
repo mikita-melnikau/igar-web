@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { config } from "@/config";
+import { logger } from "@/src/lib/api/logger";
 import type { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const { pathname, search } = new URL(request.url);
+  const fullUrl = config.SOURCE_WEBSITE + pathname + search;
+  const logInfo = `[Ajax] "${fullUrl}"`;
+
   try {
-    const { pathname, search } = new URL(request.url);
-
-    const fullUrl = config.SOURCE_WEBSITE + pathname + search;
-
+    logger.info(`${logInfo} - request started`);
     const response = await fetch(fullUrl, {
       headers: {
         ...request.headers,
@@ -33,7 +35,7 @@ export async function GET(request: NextRequest) {
       headers,
     });
   } catch (error) {
-    console.error("ajax error:", error);
+    logger.error(`${logInfo} - failed`, error);
     return NextResponse.json({ error: "ajax error" }, { status: 500 });
   }
 }

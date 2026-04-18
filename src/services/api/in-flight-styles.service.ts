@@ -18,12 +18,10 @@ export class InFlightStylesService {
     });
 
     if (result.status === 404) {
-      console.log(`[Error] ${pathToFetch} - ${result.status}`);
-      throw new Error("Page not found");
+      throw new Error("Page not found (404 response)");
     }
     if (!result.ok) {
-      console.log(`[Error] ${pathToFetch} - ${result.statusText}`);
-      throw new Error(`Failed to fetch: ${result.statusText}`);
+      throw new Error(`Failed to fetch (result !== ok): ${result.statusText}`);
     }
     return await result.text();
   }
@@ -63,7 +61,7 @@ export class InFlightStylesService {
         this.inFlight = null;
       });
     } catch (error: unknown) {
-      logger.info(`${logInfo} Failed`, { error });
+      logger.error(`${logInfo} Failed`, error);
     }
   }
 }

@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "path";
 import { readFile, writeFile } from "fs/promises";
+import { logger } from "@/src/lib/api/logger";
 import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
 
 export class FileCacheService {
@@ -44,8 +45,8 @@ export class FileCacheService {
       const scripts = JSON.parse(scriptsString) as CachedScript[];
       const headerNavbar = header || "";
       return { content, meta, links, scripts, headerNavbar };
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      logger.error(`[Cache] Read cache error`, error);
       return null;
     }
   }

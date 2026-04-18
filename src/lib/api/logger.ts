@@ -8,9 +8,8 @@ class Logger {
 
   private constructor() {
     const token = process.env.BETTER_STACK_SOURCE_TOKEN;
-    const endpoint = process.env.BETTER_STACK_INGESTING_URL;
-    if (token && endpoint) {
-      this.logtail = new BetterStackLogger(token, { endpoint });
+    if (token) {
+      this.logtail = new BetterStackLogger(token);
     }
   }
 
@@ -29,12 +28,30 @@ class Logger {
     }
   }
 
-  error<T extends Record<string, unknown>>(message: string, meta?: T) {
-    this.log("error", message, meta);
-  }
-
   info<T extends Record<string, unknown>>(message: string, meta?: T) {
     this.log("info", message, meta);
+  }
+
+  private normalizeError(error: unknown) {
+    if (error instanceof Error) {
+      return {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      };
+    }
+
+    return {
+      message: String(error),
+    };
+  }
+
+  error<T extends Record<string, unknown>>(message: string, error: unknown, meta?: T) {
+    const payload = {
+      ...meta,
+      error: error ? this.normalizeError(error) : undefined,
+    };
+    this.log("error", message, payload);
   }
 }
 
