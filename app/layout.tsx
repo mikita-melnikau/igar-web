@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import { Inter, Montserrat, Roboto } from "next/font/google";
+import Script from "next/script";
 import { AppGreenLine } from "@/src/components/AppGreenLine";
 
 const montserrat = Montserrat({
@@ -33,7 +34,7 @@ const RootLayout = async ({
     <html lang="ru">
       <head>
         <link rel="stylesheet" href="/ab-market/partners.bundle.css" />
-        <script src="//code.jivosite.com/widget/WPBvGc2oxZ" async></script>
+        <Script src="//code.jivosite.com/widget/WPBvGc2oxZ" async></Script>
       </head>
       <body id="ab-market" className={`${inter.className} ${roboto.className} ${montserrat.className}`}>
         <AppGreenLine />
