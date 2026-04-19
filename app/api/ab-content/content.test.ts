@@ -1,15 +1,28 @@
 import * as fsPromises from "fs/promises";
 import * as nodeFs from "node:fs";
-import { describe, expect, it, vi } from "vitest";
-import { PUT } from "./route";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
 
-vi.mock("fs/promises", { spy: true });
-vi.mock("node:fs", { spy: true });
+vi.mock("fs/promises", () => ({
+  readFile: vi.fn(),
+  writeFile: vi.fn(),
+}));
+vi.mock("node:fs", () => ({
+  existsSync: vi.fn(),
+}));
 
 const request = {
   json: async () => ({ path: "/" }),
 } as NextRequest;
+
+beforeEach(async () => {
+  vi.clearAllMocks();
+  global.fetch = vi.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    text: async () => "<div>new content</div>",
+  });
+});
 
 describe("content endpoint", () => {
   it("should return cache", async () => {
@@ -20,6 +33,8 @@ describe("content endpoint", () => {
       .mockResolvedValueOnce(JSON.stringify({ title: "test" }))
       .mockResolvedValueOnce(JSON.stringify([]))
       .mockResolvedValueOnce(JSON.stringify([]));
+
+    const { PUT } = await import("./route");
 
     const res = await PUT(request);
 
@@ -32,14 +47,10 @@ describe("content endpoint", () => {
   it("should fetch content if cache does not exist", async () => {
     vi.mocked(nodeFs.existsSync).mockReturnValue(false);
 
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      text: async () => "<div>new content</div>",
-    });
-
+    const { PUT } = await import("./route");
     const res = await PUT(request);
     const data = await res.json();
+
     expect(res.status).toBe(200);
     expect(data.content).toBe("<div>new content</div>");
   });
@@ -53,6 +64,7 @@ describe("content endpoint", () => {
       .mockResolvedValueOnce(JSON.stringify([]))
       .mockResolvedValueOnce(JSON.stringify([]));
 
+    const { PUT } = await import("./route");
     const res = await PUT(request);
     const data = await res.json();
 
