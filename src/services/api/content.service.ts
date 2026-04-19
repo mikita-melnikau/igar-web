@@ -112,7 +112,12 @@ export class ContentService {
         src.includes("cart.js") ||
         // аналитика
         src.includes("google-analytics_analytics") ||
-        text.includes("googletagmanager")
+        text.includes("googletagmanager") ||
+        // их чат
+        src.includes("jivosite") ||
+        src.includes("jivo") ||
+        text.includes("jivosite") ||
+        text.includes("jivo")
       ) {
         continue;
       }
