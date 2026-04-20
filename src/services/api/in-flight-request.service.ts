@@ -1,7 +1,7 @@
 import { config } from "@/config";
 import { logger } from "@/src/lib/api/logger";
 import type { ContentResponse } from "@/src/types";
-import type { FileCacheService as FileCacheServiceImpl } from "./file-cache.service";
+import type { FileCacheService as FileCacheServiceImpl } from "./FileCacheService/file-cache.service";
 import type { ContentService as ContentServiceImpl } from "./ContentService/content.service";
 
 export class InFlightRequestService {
