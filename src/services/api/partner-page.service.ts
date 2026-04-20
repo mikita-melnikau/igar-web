@@ -1,7 +1,7 @@
 import { FileCacheService } from "./FileCacheService/file-cache.service";
-import { InFlightRequestService } from "./in-flight-request.service";
+import { InFlightRequestService } from "./InFlightRequestService/in-flight-request.service";
 import { ContentService } from "./ContentService/content.service";
-import type { InFlightRequestService as InFlightRequestServiceImpl } from "./in-flight-request.service";
+import type { InFlightRequestService as InFlightRequestServiceImpl } from "./InFlightRequestService/in-flight-request.service";
 import type { FileCacheService as FileCacheServiceImpl } from "./FileCacheService/file-cache.service";
 import type { ContentResponse } from "@/src/types";
 
