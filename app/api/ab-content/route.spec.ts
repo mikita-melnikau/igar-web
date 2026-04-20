@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { partnersPageService } from "@/src/services/api/PartnerPageService/partner-page.service";
+import { partnersPageService } from "@/src/services/api/partner-page.service";
 import { PUT } from "./route";
 
-vi.mock("@/src/services/api/PartnerPageService/partner-page.service", () => ({
+vi.mock("@/src/services/api/partner-page.service", () => ({
   partnersPageService: {
     isNotPageCheck: vi.fn(),
     fetch: vi.fn(),

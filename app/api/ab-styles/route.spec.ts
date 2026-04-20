@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { partnersStylesService } from "@/src/services/api/PartnersStylesService/partners-styles.service";
+import { partnersStylesService } from "@/src/services/api/partners-styles.service";
 import { PUT } from "./route";
 
-vi.mock("@/src/services/api/PartnersStylesService/partners-styles.service", () => ({
+vi.mock("@/src/services/api/partners-styles.service", () => ({
   partnersStylesService: {
     isNotGlobalStylesCheck: vi.fn(),
     fetch: vi.fn(),

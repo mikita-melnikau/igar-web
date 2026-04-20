@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { JSDOM } from "jsdom";
-import { ContentService } from "@/src/services/api/ContentService/content.service";
+import { ContentService } from "./content.service";
 
 vi.mock("@/config", () => ({
   config: {
