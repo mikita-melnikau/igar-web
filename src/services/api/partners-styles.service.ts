@@ -1,13 +1,9 @@
 import { FileCacheService } from "./file-cache.service";
 import { InFlightStylesService } from "./in-flight-styles.service";
-import type { FileCacheService as FileCacheServiceImpl } from "./file-cache.service";
 import type { InFlightStylesService as InFlightStylesServiceImpl } from "./in-flight-styles.service";
 
-class PartnersStylesService {
-  constructor(
-    private readonly fileCache: FileCacheServiceImpl,
-    private readonly inFlightRequest: InFlightStylesServiceImpl,
-  ) {}
+export class PartnersStylesService {
+  constructor(private readonly inFlightRequest: InFlightStylesServiceImpl) {}
 
   isNotGlobalStylesCheck(pathFromBody: string) {
     return !/style\.bundle\.css/.test(pathFromBody);
@@ -28,7 +24,7 @@ export const partnersStylesService =
   (() => {
     const cacheService = new FileCacheService();
     const inFlightRequestService = new InFlightStylesService(cacheService);
-    const service = new PartnersStylesService(cacheService, inFlightRequestService);
+    const service = new PartnersStylesService(inFlightRequestService);
 
     globalForServices.partnersStylesService = service;
     return service;
