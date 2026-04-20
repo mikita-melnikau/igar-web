@@ -3,40 +3,31 @@ import { config } from "@/config";
 import { removeDomain } from "@/src/helpers/proxy/proxy.heplers";
 import type { NextRequest } from "next/server";
 
-const BYPASS_PREFIXES = [
-  "/ab-market",
-  "/public/ab-market",
+const APP_PATHS = [
   "/api/ab-content",
   "/api/ab-styles",
+  "/api/ab-cms",
+  "/api/ab-heartbeat",
   "/favicon.ico",
   "/icon.png",
   "/apple-icon.png",
-  "/.well-known/appspecific/com.chrome.devtools.json",
 ];
 
-const BLOCKED_PATHS = new Set(["/sitemap.xml", "/robots.txt"]);
+const BLOCKED_PATHS = new Set(["/sitemap.xml", "/robots.txt", "/.well-known/appspecific/com.chrome.devtools.json"]);
 
-const NOT_FOUND_PATHS = ["/blog", "/about", "/shtory", "/kovry"];
 const ASSET_PREFIXES = ["/upload/", "/local/templates/", "/public", "/static", "/img", "/api", "/ajax"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/_next")) {
+  // api & system
+  if (APP_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
 
-  // чтобы не было на / и /kovrolin одной и той же страницы с /kovrolin делаем редирект на /
-  if (pathname.startsWith("/kovrolin")) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (BYPASS_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+  // next & public
+  if (pathname.startsWith("/_next") || pathname.startsWith("/ab-market")) {
     return NextResponse.next();
-  }
-
-  if (NOT_FOUND_PATHS.some((path) => pathname.startsWith(path))) {
-    return NextResponse.rewrite(new URL("/not-found-trigger", request.url));
   }
 
   if (BLOCKED_PATHS.has(pathname)) {
@@ -47,9 +38,9 @@ export function proxy(request: NextRequest) {
     return NextResponse.rewrite(new URL(pathname + request.nextUrl.search, config.SOURCE_WEBSITE));
   }
 
+  /* То что прошло проксируется через наши page */
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-url", removeDomain(request.url));
-
   return NextResponse.next({
     request: {
       headers: requestHeaders,

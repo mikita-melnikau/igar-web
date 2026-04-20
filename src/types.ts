@@ -8,10 +8,10 @@ export type HeadLink = {
 
 export type CachedScript = {
   src: string;
-  innerHTML: string;
-  type: string;
-  defer: boolean;
-  async: boolean;
+  innerHTML?: string;
+  type?: string;
+  defer?: boolean;
+  async?: boolean;
 };
 
 export type ContentResponse = {
@@ -20,4 +20,54 @@ export type ContentResponse = {
   links: HeadLink[];
   scripts: CachedScript[];
   headerNavbar: string;
+};
+
+export type AbMarketPageParams = {
+  searchParams: { [key: string]: string | string[] | undefined };
+  params: {
+    path: string[];
+  };
+};
+
+type CmsContent = {
+  headerGreyText: string;
+  partnersSiteDeadTitle: string;
+};
+
+type ContactInfo = {
+  address: string;
+  unp: string;
+  bank: string;
+  bankBic: string;
+  email: string;
+  phone: string;
+  person: string;
+};
+
+export type PublicCmsData = {
+  contact: ContactInfo;
+  content: CmsContent;
+};
+
+export type CmsLink = {
+  url: string;
+  text?: string;
+};
+
+export type CmsData = {
+  contact: ContactInfo;
+  content: CmsContent;
+  settings: {
+    pingEndpoint: string;
+    homepageLink?: CmsLink;
+    renamedLinks: CmsLink[];
+    restrictedLinks: CmsLink[];
+    scripts: {
+      jivochat?: string;
+    };
+  };
+};
+
+export type Heartbeat = {
+  ok: boolean;
 };
