@@ -1,9 +1,9 @@
-import { FileCacheService } from "./FileCacheService/file-cache.service";
-import { InFlightStylesService } from "./InFlightStylesService/in-flight-styles.service";
-import type { FileCacheService as FileCacheServiceImpl } from "./FileCacheService/file-cache.service";
-import type { InFlightStylesService as InFlightStylesServiceImpl } from "./InFlightStylesService/in-flight-styles.service";
+import { FileCacheService } from "../FileCacheService/file-cache.service";
+import { InFlightStylesService } from "../InFlightStylesService/in-flight-styles.service";
+import type { FileCacheService as FileCacheServiceImpl } from "../FileCacheService/file-cache.service";
+import type { InFlightStylesService as InFlightStylesServiceImpl } from "../InFlightStylesService/in-flight-styles.service";
 
-class PartnersStylesService {
+export class PartnersStylesService {
   constructor(
     private readonly fileCache: FileCacheServiceImpl,
     private readonly inFlightRequest: InFlightStylesServiceImpl,

@@ -18,7 +18,6 @@ describe("PartnersPageService", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-
     service = new PartnersPageService(fileCacheMock as any, inFlightMock as any);
   });
 
