@@ -1,5 +1,7 @@
 import { JSDOM } from "jsdom";
 import { config } from "@/config";
+import { headlessCms } from "@/src/services/api/headless-cms.service";
+import { formatPhoneBY } from "@/src/helpers/shared/contacts";
 import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
 
 export class ContentService {
@@ -28,21 +30,21 @@ export class ContentService {
   ====================== */
   private replaceLinkValues(document: Document) {
     document.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]').forEach((a) => {
-      a.href = "mailto:abmarketbel@gmail.com";
-      a.textContent = "abmarketbel@gmail.com";
+      a.href = `mailto:${headlessCms.data.contact.email}`;
+      a.textContent = headlessCms.data.contact.email;
     });
 
     document.querySelectorAll<HTMLAnchorElement>('a[href^="tel:"]').forEach((a) => {
-      a.href = "tel:+375296038038";
-      a.textContent = "+375 29 603-80-38";
+      a.href = `tel:${headlessCms.data.contact.phone}`;
+      a.textContent = formatPhoneBY(headlessCms.data.contact.phone);
     });
 
     document.querySelectorAll<HTMLAnchorElement>('a[href^="https://t.me/"]').forEach((a) => {
-      a.href = "https://t.me/+375296038038";
+      a.href = `https://t.me/${headlessCms.data.contact.phone}`;
     });
 
     document.querySelectorAll<HTMLAnchorElement>('a[href^="https://max.ru/"]').forEach((a) => {
-      a.href = "https://wa.me/375296038038";
+      a.href = `https://wa.me/${headlessCms.data.contact.phone.replace("+", "")}`;
       a.classList.remove("max");
       a.innerHTML = '<img src="/ab-market/whatsapp.svg" alt="WhatsApp">';
     });
@@ -117,6 +119,14 @@ export class ContentService {
         continue;
       }
 
+      if (/jivo/.test(src) && headlessCms.data.settings.scripts.jivochat) {
+        result.push({
+          src: headlessCms.data.settings.scripts.jivochat,
+          async: true,
+        });
+        continue;
+      }
+
       result.push({
         src: src ? (src.startsWith("http") ? src : config.SOURCE_WEBSITE + src) : "",
         innerHTML: text,
@@ -175,15 +185,15 @@ export class ContentService {
       mobileCopyrights.textContent = '© ООО "АБ Маркет" 2026';
     }
 
-    const linksToHide = header.querySelectorAll(
-      '[href="/shtory/"], [href="/kovry/"], [href="/blog/"], [href="/about/"], [href="/pridvernie-kovriki/"]',
-    );
+    const selectorsToHide = headlessCms.data.settings.restrictedLinks.map(({ url }) => `[href="${url}"]`).join(", ");
+    const linksToHide = header.querySelectorAll(selectorsToHide);
     linksToHide.forEach((link) => link.parentElement?.remove());
 
-    const reshetkiLinks = header.querySelectorAll('[href="/reshetki/"]');
-
-    reshetkiLinks.forEach((link) => {
-      link.textContent = "Грязезащитные решётки";
+    headlessCms.data.settings.renamedLinks.forEach((link) => {
+      const linkEl = header.querySelector(`[href="${link.url}"]`);
+      if (linkEl) {
+        linkEl.textContent = link.text || "";
+      }
     });
 
     const innerHeader = header.querySelector(".header__inner")?.outerHTML ?? "";

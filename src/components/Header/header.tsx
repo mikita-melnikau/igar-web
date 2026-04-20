@@ -1,12 +1,14 @@
 import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
 import { HeaderLogo } from "@/src/components/Header/HeaderLogo";
+import type { PublicCmsData } from "@/src/types";
 
 interface AppHeaderProps {
   headerNavbar: string;
+  cms?: PublicCmsData;
 }
 
-export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
+export const AppHeader = ({ headerNavbar, cms }: AppHeaderProps) => {
   const clean = DOMPurify.sanitize(headerNavbar);
 
   /*
@@ -68,25 +70,14 @@ export const AppHeader = ({ headerNavbar }: AppHeaderProps) => {
       {/*    </div>*/}
       {/*  </div>*/}
       {/*</div>*/}
-      <div className={"bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile relative"}>
-        <div className={"container-2025 text-xs flex flex-wrap"}>
-          <span>
-            ООО &#34;АБ Маркет&#34;{" "}
-            <strong>является официальным дистрибьютором по коммерческим ковровым покрытиям фабрики </strong>{" "}
-            <Link href="https://nevatuft.ru/" className={"text-inherit! border-b-0! !underline"} target={"_blank"}>
-              &#34;Нева Тафт&#34;
-            </Link>{" "}
-            - крупнейшего производителя ковровых покрытий в ЕАЭС,
-          </span>
-          <span>
-            а также <strong>партнером</strong>{" "}
-            <Link className={"text-inherit!  border-b-0! !underline"} href="https://velvet-pro.ru/" target={"_blank"}>
-              ООО &#34;Вельвет Про&#34;
-            </Link>{" "}
-            - ведущего производителя ковров и штор под заказ в Российской Федерации.
-          </span>
+      {cms && (
+        <div className="header-grey-section bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile relative">
+          <div
+            className="container-2025 text-xs flex flex-wrap"
+            dangerouslySetInnerHTML={{ __html: cms.content.headerGreyText }}
+          ></div>
         </div>
-      </div>
+      )}
       <div className={"sticky left-0 top-[65px] z-50 bg-white"} dangerouslySetInnerHTML={{ __html: clean }} />
     </>
   );

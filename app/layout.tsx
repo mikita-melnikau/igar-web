@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import { Montserrat, Roboto, Inter } from "next/font/google";
+import { Inter, Montserrat, Roboto } from "next/font/google";
 import { AppGreenLine } from "@/src/components/AppGreenLine";
 
 const montserrat = Montserrat({
