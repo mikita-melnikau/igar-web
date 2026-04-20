@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { partnersStylesService } from "@/src/services/api/partners-styles.service";
 import { PUT } from "./route";
+import type { Mock } from "vitest";
+import type { NextRequest } from "next/server";
 
 vi.mock("@/src/services/api/partners-styles.service", () => ({
   partnersStylesService: {
@@ -15,12 +17,12 @@ describe("ab-styles endpoint", () => {
   });
 
   it("should return 204 and trigger fetch", async () => {
-    (partnersStylesService.isNotGlobalStylesCheck as any).mockReturnValue(false);
-    (partnersStylesService.fetch as any).mockReturnValue(undefined);
+    (partnersStylesService.isNotGlobalStylesCheck as Mock).mockReturnValue(false);
+    (partnersStylesService.fetch as Mock).mockReturnValue(undefined);
 
     const request = {
       json: async () => ({ path: "/style.bundle.css" }),
-    } as any;
+    } as NextRequest;
 
     const response = await PUT(request);
 
@@ -30,11 +32,11 @@ describe("ab-styles endpoint", () => {
   });
 
   it("should return 404 when path is not global styles", async () => {
-    (partnersStylesService.isNotGlobalStylesCheck as any).mockReturnValue(true);
+    (partnersStylesService.isNotGlobalStylesCheck as Mock).mockReturnValue(true);
 
     const request = {
       json: async () => ({ path: "/random.css" }),
-    } as any;
+    } as NextRequest;
 
     const response = await PUT(request);
 
@@ -45,14 +47,14 @@ describe("ab-styles endpoint", () => {
   });
 
   it("should return 500 when service throws unexpected error", async () => {
-    (partnersStylesService.isNotGlobalStylesCheck as any).mockReturnValue(false);
-    (partnersStylesService.fetch as any).mockImplementation(() => {
+    (partnersStylesService.isNotGlobalStylesCheck as Mock).mockReturnValue(false);
+    (partnersStylesService.fetch as Mock).mockImplementation(() => {
       throw new Error("Unexpected failure");
     });
 
     const request = {
       json: async () => ({ path: "/style.bundle.css" }),
-    } as any;
+    } as NextRequest;
 
     const response = await PUT(request);
 

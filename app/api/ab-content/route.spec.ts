@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { partnersPageService } from "@/src/services/api/partner-page.service";
 import { PUT } from "./route";
+import type { NextRequest } from "next/server";
+import type { Mock } from "vitest";
 
 vi.mock("@/src/services/api/partner-page.service", () => ({
   partnersPageService: {
@@ -11,14 +13,13 @@ vi.mock("@/src/services/api/partner-page.service", () => ({
 
 describe("ab-content endpoint", () => {
   it("returns 200 with fetched content", async () => {
-    (partnersPageService.isNotPageCheck as any).mockReturnValue(false);
-    (partnersPageService.fetch as any).mockResolvedValue({
+    (partnersPageService.fetch as Mock).mockResolvedValue({
       title: "Test Page",
     });
 
     const request = {
       json: async () => ({ path: "/valid" }),
-    } as any;
+    } as NextRequest;
 
     const response = await PUT(request);
 
@@ -29,12 +30,11 @@ describe("ab-content endpoint", () => {
   });
 
   it("returns 404 when service throws Page not found", async () => {
-    (partnersPageService.isNotPageCheck as any).mockReturnValue(false);
-    (partnersPageService.fetch as any).mockRejectedValue(new Error("Page not found"));
+    (partnersPageService.fetch as Mock).mockRejectedValue(new Error("Page not found"));
 
     const request = {
       json: async () => ({ path: "/missing" }),
-    } as any;
+    } as NextRequest;
 
     const response = await PUT(request);
 
@@ -45,12 +45,11 @@ describe("ab-content endpoint", () => {
   });
 
   it("returns 500 on unexpected error", async () => {
-    (partnersPageService.isNotPageCheck as any).mockReturnValue(false);
-    (partnersPageService.fetch as any).mockRejectedValue(new Error("DB crashed"));
+    (partnersPageService.fetch as Mock).mockRejectedValue(new Error("DB crashed"));
 
     const request = {
       json: async () => ({ path: "/error" }),
-    } as any;
+    } as NextRequest;
 
     const response = await PUT(request);
 
