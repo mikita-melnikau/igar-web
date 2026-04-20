@@ -16,7 +16,7 @@ class HeartbeatService {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
-      const heartbeatUrl = `${config.SOURCE_WEBSITE}${headlessCms.data.api.pingEndpoint}`;
+      const heartbeatUrl = `${config.SOURCE_WEBSITE}${headlessCms.data.settings.pingEndpoint}`;
       const res = await fetch(heartbeatUrl, {
         method: "GET",
         signal: controller.signal,
