@@ -1,7 +1,7 @@
 import { FileCacheService } from "./FileCacheService/file-cache.service";
-import { InFlightStylesService } from "./in-flight-styles.service";
+import { InFlightStylesService } from "./InFlightStylesService/in-flight-styles.service";
 import type { FileCacheService as FileCacheServiceImpl } from "./FileCacheService/file-cache.service";
-import type { InFlightStylesService as InFlightStylesServiceImpl } from "./in-flight-styles.service";
+import type { InFlightStylesService as InFlightStylesServiceImpl } from "./InFlightStylesService/in-flight-styles.service";
 
 class PartnersStylesService {
   constructor(

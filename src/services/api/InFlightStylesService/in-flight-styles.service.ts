@@ -1,5 +1,5 @@
 import { logger } from "@/src/lib/api/logger";
-import type { FileCacheService as FileCacheServiceImpl } from "./FileCacheService/file-cache.service";
+import type { FileCacheService as FileCacheServiceImpl } from "../FileCacheService/file-cache.service";
 
 export class InFlightStylesService {
   private inFlight: Promise<void> | null = null;
