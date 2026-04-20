@@ -114,13 +114,16 @@ export class ContentService {
         src.includes("cart.js") ||
         // аналитика
         src.includes("google-analytics_analytics") ||
-        text.includes("googletagmanager") ||
-        // их чат
-        src.includes("jivosite") ||
-        src.includes("jivo") ||
-        text.includes("jivosite") ||
-        text.includes("jivo")
+        text.includes("googletagmanager")
       ) {
+        continue;
+      }
+
+      if (/jivo/.test(src) && headlessCms.data.settings.scripts.jivochat) {
+        result.push({
+          src: headlessCms.data.settings.scripts.jivochat,
+          async: true,
+        });
         continue;
       }
 

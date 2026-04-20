@@ -8,10 +8,10 @@ export type HeadLink = {
 
 export type CachedScript = {
   src: string;
-  innerHTML: string;
-  type: string;
-  defer: boolean;
-  async: boolean;
+  innerHTML?: string;
+  type?: string;
+  defer?: boolean;
+  async?: boolean;
 };
 
 export type ContentResponse = {
@@ -62,6 +62,9 @@ export type CmsData = {
     homepageLink?: CmsLink;
     renamedLinks: CmsLink[];
     restrictedLinks: CmsLink[];
+    scripts: {
+      jivochat?: string;
+    };
   };
 };
 

@@ -28,6 +28,9 @@ class HeadlessCmsService {
       pingEndpoint: "/local/templates/new/static/dist/img/close.svg",
       renamedLinks: [],
       restrictedLinks: [],
+      scripts: {
+        jivochat: "//code.jivosite.com/widget/WPBvGc2oxZ",
+      },
     },
   };
 
@@ -66,6 +69,9 @@ class HeadlessCmsService {
               }
               restrictedLinks {
                 url
+              }
+              scripts {
+                jivochat
               }
             }
           }
