@@ -1,13 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PartnersStylesService } from "./partners-styles.service";
-
-const fileCacheMock = {
-  savePartnersStyles: vi.fn(),
-};
+import type { InFlightStylesService as InFlightStylesServiceImpl } from "@/src/services/api/in-flight-styles.service";
 
 const inFlightMock = {
   fetch: vi.fn(),
-};
+} as unknown as InFlightStylesServiceImpl;
 
 describe("PartnersStylesService", () => {
   let service: PartnersStylesService;
@@ -15,7 +12,7 @@ describe("PartnersStylesService", () => {
   beforeEach(() => {
     vi.resetAllMocks();
 
-    service = new PartnersStylesService(fileCacheMock as any, inFlightMock as any);
+    service = new PartnersStylesService(inFlightMock);
   });
 
   it("should return true when path is NOT global styles bundle", () => {

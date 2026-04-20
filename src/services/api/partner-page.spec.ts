@@ -1,13 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PartnersPageService } from "./partner-page.service";
+import type { Mock } from "vitest";
+import type { FileCacheService as FileCacheServiceImpl } from "@/src/services/api/file-cache.service";
+import type { InFlightRequestService as InFlightRequestServiceImpl } from "@/src/services/api/in-flight-request.service";
 
 const fileCacheMock = {
   get: vi.fn(),
-};
+} as unknown as FileCacheServiceImpl;
 
 const inFlightMock = {
   fetch: vi.fn(),
-};
+} as unknown as InFlightRequestServiceImpl;
 
 vi.mock("@/src/services/api/headless-cms.service", () => ({
   headlessCms: {
@@ -26,12 +29,12 @@ describe("PartnersPageService", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    service = new PartnersPageService(fileCacheMock as any, inFlightMock as any);
+    service = new PartnersPageService(fileCacheMock, inFlightMock);
   });
 
   it("should transform root path to /kovrolin/", async () => {
-    fileCacheMock.get.mockResolvedValue(null);
-    inFlightMock.fetch.mockResolvedValue({ ok: true });
+    (fileCacheMock.get as Mock).mockResolvedValue(null);
+    (inFlightMock.fetch as Mock).mockResolvedValue({ ok: true });
 
     await service.fetch("/");
 
@@ -39,8 +42,8 @@ describe("PartnersPageService", () => {
   });
 
   it("should keep non-root paths unchanged", async () => {
-    fileCacheMock.get.mockResolvedValue(null);
-    inFlightMock.fetch.mockResolvedValue({ ok: true });
+    (fileCacheMock.get as Mock).mockResolvedValue(null);
+    (inFlightMock.fetch as Mock).mockResolvedValue({ ok: true });
 
     await service.fetch("/partners/test");
 
@@ -50,8 +53,8 @@ describe("PartnersPageService", () => {
   it("should return cached result and trigger background fetch ", async () => {
     const cached = { title: "cached" };
 
-    fileCacheMock.get.mockResolvedValue(cached);
-    inFlightMock.fetch.mockResolvedValue({ title: "fresh" });
+    (fileCacheMock.get as Mock).mockResolvedValue(cached);
+    (inFlightMock.fetch as Mock).mockResolvedValue({ title: "fresh" });
 
     const result = await service.fetch("/page");
 
@@ -62,8 +65,8 @@ describe("PartnersPageService", () => {
   });
 
   it("should call inFlight fetch without cached value when cache miss", async () => {
-    fileCacheMock.get.mockResolvedValue(null);
-    inFlightMock.fetch.mockResolvedValue({ title: "fresh" });
+    (fileCacheMock.get as Mock).mockResolvedValue(null);
+    (inFlightMock.fetch as Mock).mockResolvedValue({ title: "fresh" });
 
     await service.fetch("/page");
 
