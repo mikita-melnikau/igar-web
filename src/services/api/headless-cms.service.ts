@@ -149,6 +149,7 @@ class HeadlessCmsService {
   async refresh(): Promise<PublicCmsData> {
     const fresh = await this.fetch();
     this.data = fresh;
+    logger.info("💾 Cms content has been updated.", fresh);
     return {
       content: fresh.content,
       contact: fresh.contact,
