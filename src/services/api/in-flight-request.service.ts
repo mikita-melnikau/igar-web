@@ -6,11 +6,47 @@ import type { ContentService as ContentServiceImpl } from "./content.service";
 
 export class InFlightRequestService {
   private readonly inFlight = new Map<string, Promise<ContentResponse>>();
+  private nextHeaderUpdateTs = 0;
 
   constructor(
     private readonly fileCache: FileCacheServiceImpl,
     private readonly contentService: ContentServiceImpl,
   ) {}
+
+  private getCacheKey(path: string): string {
+    const pathToFetch = path ?? "/";
+    return !pathToFetch || pathToFetch === "/" ? "___" : pathToFetch;
+  }
+
+  private getCachedHeader(cachedHeader?: string) {
+    if (!cachedHeader) {
+      return cachedHeader;
+    }
+    const now = Date.now();
+    if (this.nextHeaderUpdateTs < now) {
+      this.nextHeaderUpdateTs = 1000 + now;
+      // this.nextHeaderUpdateTs = 24 * 60 * 60 * 1000 + now;
+      return;
+    }
+    return cachedHeader;
+  }
+
+  private async fetchContent(pathToFetch: string): Promise<string> {
+    const p = pathToFetch || "";
+    const pageAddress = config.SOURCE_WEBSITE + p;
+    const result = await fetch(pageAddress, {
+      headers: {
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+      },
+    });
+    if (result.status === 404) {
+      throw new Error("Page not found (404 response)");
+    }
+    if (!result.ok) {
+      throw new Error(`Failed to fetch (result !== ok): ${result.statusText}`);
+    }
+    return await result.text();
+  }
 
   /**
    * Function to fetch and store data
@@ -33,8 +69,9 @@ export class InFlightRequestService {
       const composition = async () => {
         logger.info(`${logInfo} Request started`, { endpoint: logEndpoint, cache: logIsCached });
         const html = await this.fetchContent(pathFromBody);
-        const content = this.contentService.parseHtml(html, cachedValue?.headerNavbar);
-        await this.fileCache.store(pathFromBody, content);
+        const cachedHeader = this.getCachedHeader(cachedValue?.headerNavbar);
+        const content = this.contentService.parseHtml(html, cachedHeader);
+        await this.fileCache.store(pathFromBody, content, !cachedHeader);
         return content;
       };
       const promise = composition();
@@ -47,27 +84,5 @@ export class InFlightRequestService {
       }
       throw error;
     }
-  }
-
-  private getCacheKey(path: string): string {
-    const pathToFetch = path ?? "/";
-    return !pathToFetch || pathToFetch === "/" ? "___" : pathToFetch;
-  }
-
-  private async fetchContent(pathToFetch: string): Promise<string> {
-    const p = pathToFetch || "";
-    const pageAddress = config.SOURCE_WEBSITE + p;
-    const result = await fetch(pageAddress, {
-      headers: {
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      },
-    });
-    if (result.status === 404) {
-      throw new Error("Page not found (404 response)");
-    }
-    if (!result.ok) {
-      throw new Error(`Failed to fetch (result !== ok): ${result.statusText}`);
-    }
-    return await result.text();
   }
 }

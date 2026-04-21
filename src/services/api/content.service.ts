@@ -5,26 +5,6 @@ import { formatPhoneBY } from "@/src/helpers/shared/contacts";
 import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
 
 export class ContentService {
-  public parseHtml(html: string, cachedHeader?: string): ContentResponse {
-    const dom = new JSDOM(html);
-    const { window } = dom;
-    const { document } = window;
-
-    this.replaceLinkValues(document);
-
-    const links = this.extractLinks(document);
-    const scripts = this.extractScripts(document);
-    const meta = this.compilePageMetadata(document);
-
-    const headerNavbar = this.compilePageHeader(document, cachedHeader);
-
-    this.fixPageContent(document);
-
-    const body = document.querySelector("body");
-    const content = body?.innerHTML ?? "<h1>Body is empty</h1>";
-    return { content, links, meta, scripts, headerNavbar };
-  }
-
   /* ======================
      Replacements
   ====================== */
@@ -48,6 +28,13 @@ export class ContentService {
       a.classList.remove("max");
       a.innerHTML = '<img src="/ab-market/whatsapp.svg" alt="WhatsApp">';
     });
+  }
+
+  private removeHeader(document: Document) {
+    const header = document.querySelector("header");
+    if (header) {
+      header.remove();
+    }
   }
 
   /* ======================
@@ -154,13 +141,8 @@ export class ContentService {
     return { title: title ?? "", description: description ?? "", keywords: keywords ?? "" };
   }
 
-  /* ======================
-     Main method
-  ====================== */
-
-  private compilePageHeader(document: Document, cachedHeader?: string): string {
+  private compilePageHeader(document: Document): string {
     const header = document.querySelector("header");
-
     if (!header) {
       return "";
     }
@@ -201,10 +183,30 @@ export class ContentService {
     const innerHeader = header.querySelector(".header__inner")?.outerHTML ?? "";
     const headerMobile = header.querySelector(".header-mobile")?.outerHTML ?? "";
     const headerMobileOverlay = header.querySelector(".header-mobile-overlay")?.outerHTML ?? "";
+    return innerHeader + headerMobile + headerMobileOverlay;
+  }
 
-    const fixedHeader = innerHeader + headerMobile + headerMobileOverlay;
+  /* ======================
+     Main method
+  ====================== */
+  public parseHtml(html: string, cachedHeader?: string): ContentResponse {
+    const dom = new JSDOM(html);
+    const { window } = dom;
+    const { document } = window;
 
-    header.remove();
-    return cachedHeader || fixedHeader;
+    this.replaceLinkValues(document);
+
+    const links = this.extractLinks(document);
+    const scripts = this.extractScripts(document);
+    const meta = this.compilePageMetadata(document);
+
+    const headerNavbar = cachedHeader || this.compilePageHeader(document);
+
+    this.removeHeader(document);
+    this.fixPageContent(document);
+
+    const body = document.querySelector("body");
+    const content = body?.innerHTML ?? "<h1>Body is empty</h1>";
+    return { content, links, meta, scripts, headerNavbar };
   }
 }
