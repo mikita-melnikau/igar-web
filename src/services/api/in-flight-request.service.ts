@@ -12,28 +12,6 @@ export class InFlightRequestService {
     private readonly contentService: ContentServiceImpl,
   ) {}
 
-  private getCacheKey(path: string): string {
-    const pathToFetch = path ?? "/";
-    return !pathToFetch || pathToFetch === "/" ? "___" : pathToFetch;
-  }
-
-  private async fetchContent(pathToFetch: string): Promise<string> {
-    const p = pathToFetch || "";
-    const pageAddress = config.SOURCE_WEBSITE + p;
-    const result = await fetch(pageAddress, {
-      headers: {
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      },
-    });
-    if (result.status === 404) {
-      throw new Error("Page not found (404 response)");
-    }
-    if (!result.ok) {
-      throw new Error(`Failed to fetch (result !== ok): ${result.statusText}`);
-    }
-    return await result.text();
-  }
-
   /**
    * Function to fetch and store data
    * @param pathFromBody
@@ -69,5 +47,27 @@ export class InFlightRequestService {
       }
       throw error;
     }
+  }
+
+  private getCacheKey(path: string): string {
+    const pathToFetch = path ?? "/";
+    return !pathToFetch || pathToFetch === "/" ? "___" : pathToFetch;
+  }
+
+  private async fetchContent(pathToFetch: string): Promise<string> {
+    const p = pathToFetch || "";
+    const pageAddress = config.SOURCE_WEBSITE + p;
+    const result = await fetch(pageAddress, {
+      headers: {
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+      },
+    });
+    if (result.status === 404) {
+      throw new Error("Page not found (404 response)");
+    }
+    if (!result.ok) {
+      throw new Error(`Failed to fetch (result !== ok): ${result.statusText}`);
+    }
+    return await result.text();
   }
 }

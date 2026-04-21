@@ -6,6 +6,7 @@ import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/sr
 
 export class FileCacheService {
   private CACHE_DIR = join(process.cwd(), "cache");
+  private nextHeaderUpdateTs = 0;
 
   get headerFile(): string {
     return join(this.CACHE_DIR, "header.html");
@@ -59,8 +60,10 @@ export class FileCacheService {
       writeFile(cacheFiles.links, JSON.stringify(data.links), "utf-8"),
       writeFile(cacheFiles.scripts, JSON.stringify(data.scripts), "utf-8"),
     ]);
-    if (!existsSync(this.headerFile)) {
+    const now = Date.now();
+    if (!existsSync(this.headerFile) || this.nextHeaderUpdateTs < now) {
       await writeFile(this.headerFile, data.headerNavbar, "utf-8");
+      this.nextHeaderUpdateTs = 24 * 60 * 60 * 1000 + now;
     }
   }
 

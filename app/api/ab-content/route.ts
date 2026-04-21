@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { partnersPageService } from "@/src/services/api/partner-page.service";
 import { headlessCms } from "@/src/services/api/headless-cms.service";
+import { partnersPageService } from "@/src/services/api/partner-page.service";
 import type { NextRequest } from "next/server";
 
 const isNotValidPathCheck = (pathFromBody: string): boolean => {
@@ -11,10 +11,10 @@ const isNotValidPathCheck = (pathFromBody: string): boolean => {
     return true;
   }
   const noQueryPath = pathFromBody.split("?")[0];
-  if (headlessCms.data.settings.homepageLink && noQueryPath === headlessCms.data.settings.homepageLink.url) {
+  if (headlessCms.data.settings.homepageLink && noQueryPath === headlessCms.data.settings.homepageLink) {
     return true;
   }
-  return headlessCms.data.settings.restrictedLinks.some(({ url }) => url === noQueryPath);
+  return headlessCms.data.settings.restrictedLinks.some((href) => href === noQueryPath);
 };
 
 export async function PUT(request: NextRequest) {

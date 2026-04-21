@@ -1,6 +1,6 @@
 import { fetchDato } from "@/src/lib/api/dato-cms";
 import { logger } from "@/src/lib/api/logger";
-import type { CmsData, PublicCmsData } from "@/src/types";
+import type { CmsData, CmsDataResponse, PublicCmsData } from "@/src/types";
 
 class HeadlessCmsService {
   private readonly defaultValue: CmsData = {
@@ -15,12 +15,9 @@ class HeadlessCmsService {
     },
     content: {
       headerGreyText: `
-        ООО &#34;АБ Маркет&#34;{" "}
-        <strong>является официальным дистрибьютором по коммерческим ковровым покрытиям фабрики </strong>{" "}
-        <Link href="https://nevatuft.ru/" className={"text-inherit! border-b-0! !underline"} target={"_blank"}>
-          &#34;Нева Тафт&#34;
-        </Link>{" "}
-        - крупнейшего производителя ковровых покрытий в ЕАЭС
+        <p><span>ООО "АБ Маркет"&nbsp;<strong>является официальным дистрибьютором по коммерческим ковровым покрытиям </strong></span></p>
+        <p><span><strong>фабрики </strong><a class="text-inherit! border-b-0! !underline" target="_blank" href="https://nevatuft.ru/" rel="noopener">"Нева Тафт"</a>&nbsp;- крупнейшего производителя ковровых покрытий в ЕАЭС,</span></p>
+        <p><span>а также <strong>партнером</strong>&nbsp;<a class="text-inherit!  border-b-0! !underline" target="_blank" href="https://velvet-pro.ru/" rel="noopener">ООО "Вельвет Про"</a>&nbsp;- ведущего производителя ковров и штор под заказ в Российской Федерации.</span></p>
       `,
       partnersSiteDeadTitle: "Чтобы заказать ковролин вам не нужен сайт!",
     },
@@ -40,9 +37,46 @@ class HeadlessCmsService {
     this.data = { ...this.defaultValue };
   }
 
+  private deepTrim<T>(obj: T): T {
+    if (typeof obj === "string") {
+      return obj.trim() as T;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(this.deepTrim) as T;
+    }
+    if (obj && typeof obj === "object") {
+      const result = {} as T;
+      for (const key in obj) {
+        result[key] = this.deepTrim(obj[key]);
+      }
+      return result;
+    }
+    return obj;
+  }
+
+  private normalize(response: CmsDataResponse): CmsData {
+    if (!response.config) {
+      throw new Error("No config provided");
+    }
+    const d = response.config;
+    const restrictedLinks = d.settings.restrictedLinks.map(({ url }) => url.trim());
+    const homepageLink = d.settings.homepageLink?.url.trim();
+    const renamedLinks = d.settings.renamedLinks.map((l) => this.deepTrim(l));
+    return {
+      contact: this.deepTrim(d.contact),
+      content: d.content,
+      settings: {
+        ...d.settings,
+        restrictedLinks,
+        renamedLinks,
+        homepageLink,
+      },
+    };
+  }
+
   private async fetch(): Promise<CmsData> {
     try {
-      const fetchResult = await fetchDato<{ config: CmsData }>(`
+      const fetchResult = await fetchDato<CmsDataResponse>(`
         query {
           config {
             contact {
@@ -77,10 +111,8 @@ class HeadlessCmsService {
           }
         }
       `);
-      if (!fetchResult.config) {
-        throw new Error("No config provided");
-      }
-      return fetchResult.config;
+      logger.info("CMS successfully fetched", fetchResult.config);
+      return this.normalize(fetchResult);
     } catch (error) {
       logger.error("Dato CMS fetch error", error);
       return this.data || this.defaultValue;
@@ -109,4 +141,15 @@ class HeadlessCmsService {
   }
 }
 
-export const headlessCms = new HeadlessCmsService();
+const globalForServices = globalThis as typeof globalThis & {
+  headlessCms?: HeadlessCmsService;
+};
+
+// singleton
+export const headlessCms =
+  globalForServices.headlessCms ??
+  (() => {
+    const service = new HeadlessCmsService();
+    globalForServices.headlessCms = service;
+    return service;
+  })();

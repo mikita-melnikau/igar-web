@@ -73,7 +73,7 @@ export const AppHeader = ({ headerNavbar, cms }: AppHeaderProps) => {
       {cms && (
         <div className="header-grey-section bg-[#f8f9fa] border-b py-2  border-gray-200 hide-on-mobile relative">
           <div
-            className="container-2025 text-xs flex flex-wrap"
+            className="container-2025 text-xs flex flex-wrap gap-x-1"
             dangerouslySetInnerHTML={{ __html: cms.content.headerGreyText }}
           ></div>
         </div>
