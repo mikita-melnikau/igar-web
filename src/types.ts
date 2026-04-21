@@ -54,14 +54,30 @@ export type CmsLink = {
   text?: string;
 };
 
+export type CmsDataResponse = {
+  config: {
+    contact: ContactInfo;
+    content: CmsContent;
+    settings: {
+      pingEndpoint: string;
+      homepageLink?: CmsLink;
+      renamedLinks: CmsLink[];
+      restrictedLinks: CmsLink[];
+      scripts: {
+        jivochat?: string;
+      };
+    };
+  };
+};
+
 export type CmsData = {
   contact: ContactInfo;
   content: CmsContent;
   settings: {
     pingEndpoint: string;
-    homepageLink?: CmsLink;
+    homepageLink?: string;
     renamedLinks: CmsLink[];
-    restrictedLinks: CmsLink[];
+    restrictedLinks: string[];
     scripts: {
       jivochat?: string;
     };

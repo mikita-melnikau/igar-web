@@ -1,6 +1,6 @@
 import { fetchDato } from "@/src/lib/api/dato-cms";
 import { logger } from "@/src/lib/api/logger";
-import type { CmsData, PublicCmsData } from "@/src/types";
+import type { CmsData, CmsDataResponse, PublicCmsData } from "@/src/types";
 
 class HeadlessCmsService {
   private readonly defaultValue: CmsData = {
@@ -37,9 +37,46 @@ class HeadlessCmsService {
     this.data = { ...this.defaultValue };
   }
 
+  private deepTrim<T>(obj: T): T {
+    if (typeof obj === "string") {
+      return obj.trim() as T;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(this.deepTrim) as T;
+    }
+    if (obj && typeof obj === "object") {
+      const result = {} as T;
+      for (const key in obj) {
+        result[key] = this.deepTrim(obj[key]);
+      }
+      return result;
+    }
+    return obj;
+  }
+
+  private normalize(response: CmsDataResponse): CmsData {
+    if (!response.config) {
+      throw new Error("No config provided");
+    }
+    const d = response.config;
+    const restrictedLinks = d.settings.restrictedLinks.map(({ url }) => url.trim());
+    const homepageLink = d.settings.homepageLink?.url.trim();
+    const renamedLinks = d.settings.renamedLinks.map((l) => this.deepTrim(l));
+    return {
+      contact: this.deepTrim(d.contact),
+      content: d.content,
+      settings: {
+        ...d.settings,
+        restrictedLinks,
+        renamedLinks,
+        homepageLink,
+      },
+    };
+  }
+
   private async fetch(): Promise<CmsData> {
     try {
-      const fetchResult = await fetchDato<{ config: CmsData }>(`
+      const fetchResult = await fetchDato<CmsDataResponse>(`
         query {
           config {
             contact {
@@ -74,11 +111,8 @@ class HeadlessCmsService {
           }
         }
       `);
-      if (!fetchResult.config) {
-        throw new Error("No config provided");
-      }
       logger.info("CMS successfully fetched", fetchResult.config);
-      return fetchResult.config;
+      return this.normalize(fetchResult);
     } catch (error) {
       logger.error("Dato CMS fetch error", error);
       return this.data || this.defaultValue;

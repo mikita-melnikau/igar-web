@@ -25,7 +25,7 @@ export class PartnersPageService {
   private pathTransformer(path: string) {
     const isHomepage = !path || path === "/";
     if (headlessCms.data.settings.homepageLink && isHomepage) {
-      return headlessCms.data.settings.homepageLink.url;
+      return headlessCms.data.settings.homepageLink;
     }
     if (isHomepage) {
       return "/";
