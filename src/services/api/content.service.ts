@@ -185,9 +185,11 @@ export class ContentService {
       mobileCopyrights.textContent = '© ООО "АБ Маркет" 2026';
     }
 
-    const selectorsToHide = headlessCms.data.settings.restrictedLinks.map(({ url }) => `[href="${url}"]`).join(", ");
-    const linksToHide = header.querySelectorAll(selectorsToHide);
-    linksToHide.forEach((link) => link.parentElement?.remove());
+    if (headlessCms.data.settings.restrictedLinks.length > 0) {
+      const selectorsToHide = headlessCms.data.settings.restrictedLinks.map((href) => `[href="${href}"]`).join(", ");
+      const linksToHide = header.querySelectorAll(selectorsToHide);
+      linksToHide.forEach((link) => link.parentElement?.remove());
+    }
 
     headlessCms.data.settings.renamedLinks.forEach((link) => {
       const linkEl = header.querySelector(`[href="${link.url}"]`);
