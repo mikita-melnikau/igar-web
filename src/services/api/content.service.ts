@@ -37,6 +37,10 @@ export class ContentService {
     }
   }
 
+  /* ======================
+     Extractors
+  ====================== */
+
   private fixPageContent(document: Document) {
     const featuresBlock = document.querySelector(".features-section-2025");
     if (featuresBlock) {
@@ -89,10 +93,6 @@ export class ContentService {
       paragraphs[2].textContent = `${headlessCms.data.contact.address}`;
     }
   }
-
-  /* ======================
-   Extractors
-  ====================== */
 
   private extractLinks(document: Document): HeadLink[] {
     const result: HeadLink[] = [];
@@ -231,8 +231,8 @@ export class ContentService {
   }
 
   /* ======================
-    Main method
- ====================== */
+     Main method
+  ====================== */
   public parseHtml(html: string, cachedHeader?: string): ContentResponse {
     const dom = new JSDOM(html);
     const { window } = dom;

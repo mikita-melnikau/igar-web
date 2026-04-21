@@ -47,7 +47,7 @@ class HeadlessCmsService {
     this.data = { ...this.defaultValue };
   }
 
-  private deepTrim = <T>(obj: T): T => {
+  private deepTrim<T>(obj: T): T {
     if (typeof obj === "string") {
       return obj.trim() as T;
     }
@@ -62,7 +62,7 @@ class HeadlessCmsService {
       return result;
     }
     return obj;
-  };
+  }
 
   private normalize(response: CmsDataResponse): CmsData {
     if (!response.config) {
