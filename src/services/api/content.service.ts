@@ -55,6 +55,43 @@ export class ContentService {
 
       main.insertAdjacentElement("afterbegin", div);
     }
+
+    const mapBlock = document.querySelector("#contacts-map");
+
+    if (mapBlock) {
+      mapBlock.setAttribute(
+        "data-center-coords",
+        `${headlessCms.data.contact.map.centerCoords.lat},${headlessCms.data.contact.map.centerCoords.lng}`,
+      );
+
+      mapBlock.setAttribute("data-marker-coords", JSON.stringify(headlessCms.data.contact.map.markerCoords));
+    }
+
+    const tabs = document.querySelector(".contacts-cities-tabs");
+    const maxContacts = document.querySelectorAll(".contacts__item--max");
+    if (tabs) {
+      tabs.remove();
+    }
+    maxContacts.forEach((contact) => contact.remove());
+    const addresses = document.querySelectorAll(".contacts__address");
+
+    addresses.forEach((address) => (address.textContent = headlessCms.data.contact.address));
+
+    const contactForm = document.querySelector(".contacts-form-wrap__body");
+
+    if (contactForm) {
+      contactForm.remove();
+    }
+
+    const requisitesBlock = document.querySelector(".requisites_body");
+
+    if (requisitesBlock) {
+      const paragraphs = requisitesBlock.querySelectorAll("p");
+
+      paragraphs[0].textContent = headlessCms.data.contact.person;
+      paragraphs[1].textContent = `УНП ${headlessCms.data.contact.unp}`;
+      paragraphs[2].textContent = `${headlessCms.data.contact.address}`;
+    }
   }
 
   private extractLinks(document: Document): HeadLink[] {

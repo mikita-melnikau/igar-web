@@ -12,6 +12,16 @@ class HeadlessCmsService {
       unp: "193659113",
       bank: '"Приорбанк" ОАО г. Минск, ул. .Хоружей, 31 А',
       bankBic: "PJCBBY2X",
+      map: {
+        centerCoords: {
+          lat: 53.929594999996425,
+          lng: 27.490854999999996,
+        },
+        markerCoords: [
+          { lat: 53.929594999996425, lng: 27.490854999999996 },
+          { lat: 59.994863, lng: 30.247871 },
+        ],
+      },
     },
     content: {
       headerGreyText: `
@@ -87,6 +97,7 @@ class HeadlessCmsService {
               email
               phone
               person
+              map
             }
             content {
               headerGreyText

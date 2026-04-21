@@ -34,6 +34,11 @@ type CmsContent = {
   partnersSiteDeadTitle: string;
 };
 
+type Coords = {
+  lat: number;
+  lng: number;
+};
+
 type ContactInfo = {
   address: string;
   unp: string;
@@ -42,6 +47,10 @@ type ContactInfo = {
   email: string;
   phone: string;
   person: string;
+  map: {
+    centerCoords: Coords;
+    markerCoords: Coords[];
+  };
 };
 
 export type PublicCmsData = {
