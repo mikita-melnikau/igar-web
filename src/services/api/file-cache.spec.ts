@@ -74,7 +74,7 @@ describe("FileCacheService", () => {
       headerNavbar: "<header>",
     };
 
-    await service.store("/test", data);
+    await service.store("/test", data, true);
 
     // html, meta, links, scripts, header
     expect(vi.mocked(fsPromises.writeFile)).toHaveBeenCalledTimes(5);
