@@ -16,9 +16,7 @@ vi.mock("@/src/services/api/headless-cms.service", () => ({
   headlessCms: {
     data: {
       settings: {
-        homepageLink: {
-          url: "/kovrolin/",
-        },
+        homepageLink: "/kovrolin/",
       },
     },
   },
