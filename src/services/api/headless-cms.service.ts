@@ -72,8 +72,12 @@ class HeadlessCmsService {
     const restrictedLinks = d.settings.restrictedLinks.map(({ url }) => url.trim());
     const homepageLink = d.settings.homepageLink?.url.trim();
     const renamedLinks = d.settings.renamedLinks.map((l) => this.deepTrim(l));
+    const { map, ...contactData } = d.contact;
     return {
-      contact: this.deepTrim(d.contact),
+      contact: {
+        ...this.deepTrim(contactData),
+        map,
+      },
       content: d.content,
       settings: {
         ...d.settings,
