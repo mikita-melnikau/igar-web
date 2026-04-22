@@ -152,7 +152,7 @@ export class ContentService {
   }
 
   private get restrictedScriptTextRegexp() {
-    const patterns = ["googletagmanager", "grSiteKey", "jivo", 'var cl = "bx-core"'];
+    const patterns = ["googletagmanager", "grSiteKey", "jivo", 'var cl = "bx-core"', "nca-cookiesacceptpro-line-wrp"];
     return regexpByStringPatterns(patterns);
   }
 
