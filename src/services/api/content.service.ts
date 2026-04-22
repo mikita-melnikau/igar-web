@@ -2,6 +2,7 @@ import { JSDOM } from "jsdom";
 import { config } from "@/config";
 import { headlessCms } from "@/src/services/api/headless-cms.service";
 import { formatPhoneBY } from "@/src/helpers/shared/contacts";
+import { regexpByStringPatterns } from "@/src/helpers/shared/regexp";
 import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
 
 export class ContentService {
@@ -127,22 +128,42 @@ export class ContentService {
     return result;
   }
 
+  private normalizeScriptSrc(scriptSrc: string): string {
+    if (!scriptSrc) {
+      return "";
+    }
+    if (scriptSrc.startsWith("http")) {
+      return scriptSrc;
+    }
+    // case //url
+    if (!/^\p{L}/u.test(scriptSrc)) {
+      const s = scriptSrc.trim().replace(/^[^\p{L}]+/u, "");
+      return `${config.SOURCE_WEBSITE}/${s}`;
+    }
+    return config.SOURCE_WEBSITE + scriptSrc;
+  }
+
+  private get restrictedScriptSrcRegexp() {
+    const patterns = ["google-analytics_analytics", "recaptcha", "cart.js", "jivo"];
+    return regexpByStringPatterns(patterns);
+  }
+
+  private get restrictedScriptTextRegexp() {
+    const patterns = ["googletagmanager", "grSiteKey", 'var cl = "bx-core"'];
+    return regexpByStringPatterns(patterns);
+  }
+
   private extractScripts(document: Document): CachedScript[] {
     const result: CachedScript[] = [];
     const scripts = Array.from(document.querySelectorAll("script"));
     for (const script of scripts) {
-      const src = script.src || "";
+      const src = this.normalizeScriptSrc(script.src);
       const text = script.textContent || "";
       const type = script.type;
 
       if (
         // "@context": "https:\/\/schema.org",
-        type === "application/ld+json" ||
-        // корзина
-        src.includes("cart.js") ||
-        // аналитика
-        src.includes("google-analytics_analytics") ||
-        text.includes("googletagmanager")
+        type === "application/ld+json"
       ) {
         continue;
       }
@@ -155,8 +176,17 @@ export class ContentService {
         continue;
       }
 
+      if (src && this.restrictedScriptSrcRegexp.test(src)) {
+        console.log(src);
+        continue;
+      }
+
+      if (text && this.restrictedScriptTextRegexp.test(text)) {
+        continue;
+      }
+
       result.push({
-        src: src ? (src.startsWith("http") ? src : config.SOURCE_WEBSITE + src) : "",
+        src,
         innerHTML: text,
         type: script.type ?? "text/javascript",
         defer: script.defer ?? false,

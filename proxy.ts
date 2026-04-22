@@ -15,7 +15,7 @@ const APP_PATHS = [
 
 const BLOCKED_PATHS = new Set(["/sitemap.xml", "/robots.txt", "/.well-known/appspecific/com.chrome.devtools.json"]);
 
-const ASSET_PREFIXES = ["/upload/", "/local/templates/", "/public", "/static", "/img", "/api", "/ajax"];
+const ASSET_PREFIXES = ["/bitrix/", "/upload/", "/local/templates/", "/public", "/static", "/img", "/api", "/ajax"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

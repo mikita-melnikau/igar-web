@@ -1,7 +1,9 @@
 import "./globals.css";
 
 import { Inter, Montserrat, Roboto } from "next/font/google";
+import { headers } from "next/headers";
 import { AppGreenLine } from "@/src/components/AppGreenLine";
+import { getBitrixHtmlClasses } from "@/src/lib/client/bitrix-classes";
 
 const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
@@ -29,8 +31,12 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const headersList = await headers();
+  const userAgent = headersList.get("user-agent") ?? "";
+  const bitrixClasses = getBitrixHtmlClasses(userAgent);
+
   return (
-    <html lang="ru">
+    <html lang="ru" className={bitrixClasses}>
       <head>
         <link rel="stylesheet" href="/ab-market/partners.bundle.css" />
       </head>
