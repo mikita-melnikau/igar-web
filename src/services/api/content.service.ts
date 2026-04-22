@@ -42,6 +42,10 @@ export class ContentService {
   ====================== */
 
   private fixPageContent(document: Document) {
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footer.remove();
+    }
     const featuresBlock = document.querySelector(".features-section-2025");
     if (featuresBlock) {
       featuresBlock.remove();

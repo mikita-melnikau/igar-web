@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --footer-bg: #272e35;
+  --footer-muted: #9da6af;
 }
 
 body {
@@ -106,4 +108,10 @@ body {
         padding-left: 0;
         padding-bottom: 0;
     }
+}
+/*tw variables*/
+@theme inline {
+    --color-logo-color: var(--logo-color);
+    --color-footer-color: var(--footer-bg);
+    --color-footer-muted-color: var(--footer-muted);
 }
