@@ -111,13 +111,14 @@ describe("content service", () => {
         <script src="google-analytics_analytics.js"></script>
         <script type="application/ld+json">{}</script>
         <script src="/app.js">console.log("ok")</script>
+        <script src="https://jivo.chat/script.js"></script>
       </body>
     `;
 
     const result = service.parseHtml(html);
 
     // only app.js survives
-    expect(result.scripts.length).toBe(1);
+    expect(result.scripts.length).toBe(2);
 
     expect(result.scripts[0].src).toBe("https://test.com/app.js");
     expect(result.scripts[0].innerHTML).toContain("console.log");
