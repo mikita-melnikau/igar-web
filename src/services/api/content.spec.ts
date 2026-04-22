@@ -116,8 +116,8 @@ describe("content service", () => {
 
     const result = service.parseHtml(html);
 
-    // only app.js survives
-    expect(result.scripts.length).toBe(1);
+    // only app.js and chat
+    expect(result.scripts.length).toBe(2);
 
     expect(result.scripts[0].src).toBe("https://test.com/app.js");
     expect(result.scripts[0].innerHTML).toContain("console.log");
