@@ -38,15 +38,18 @@ export class ContentService {
     }
   }
 
+  private removeFooter(document: Document) {
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footer.remove();
+    }
+  }
+
   /* ======================
      Extractors
   ====================== */
 
   private fixPageContent(document: Document) {
-    const footer = document.querySelector("footer");
-    if (footer) {
-      footer.remove();
-    }
     const featuresBlock = document.querySelector(".features-section-2025");
     if (featuresBlock) {
       featuresBlock.remove();
@@ -144,12 +147,19 @@ export class ContentService {
   }
 
   private get restrictedScriptSrcRegexp() {
-    const patterns = ["google-analytics_analytics", "recaptcha", "cart.js", "jivo"];
+    const patterns = ["google-analytics_analytics", "recaptcha", "cart.js", "jivo", "jivosite"];
     return regexpByStringPatterns(patterns);
   }
 
   private get restrictedScriptTextRegexp() {
-    const patterns = ["googletagmanager", "grSiteKey", "jivo", 'var cl = "bx-core"'];
+    const patterns = [
+      "googletagmanager",
+      "grSiteKey",
+      "jivo",
+      "jivosite",
+      'var cl = "bx-core"',
+      "nca-cookiesacceptpro-line-wrp",
+    ];
     return regexpByStringPatterns(patterns);
   }
 
@@ -284,6 +294,7 @@ export class ContentService {
     const headerNavbar = cachedHeader || this.compilePageHeader(document);
 
     this.removeHeader(document);
+    this.removeFooter(document);
     this.fixPageContent(document);
 
     const body = document.querySelector("body");
