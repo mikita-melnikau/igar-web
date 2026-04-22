@@ -138,19 +138,12 @@ export class ContentService {
         src.includes("cart.js") ||
         // аналитика
         src.includes("google-analytics_analytics") ||
-        text.includes("googletagmanager")
+        text.includes("googletagmanager") ||
+        text.includes("jivo") ||
+        src.includes("jivo")
       ) {
         continue;
       }
-
-      if (/jivo/.test(src) && headlessCms.data.settings.scripts.jivochat) {
-        result.push({
-          src: headlessCms.data.settings.scripts.jivochat,
-          async: true,
-        });
-        continue;
-      }
-
       result.push({
         src: src ? (src.startsWith("http") ? src : config.SOURCE_WEBSITE + src) : "",
         innerHTML: text,
@@ -159,6 +152,14 @@ export class ContentService {
         async: script.async ?? false,
       });
     }
+
+    if (headlessCms.data.settings.scripts.jivochat) {
+      result.push({
+        src: headlessCms.data.settings.scripts.jivochat,
+        async: true,
+      });
+    }
+
     return result;
   }
 
