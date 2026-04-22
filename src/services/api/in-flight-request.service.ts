@@ -24,8 +24,7 @@ export class InFlightRequestService {
     }
     const now = Date.now();
     if (this.nextHeaderUpdateTs < now) {
-      this.nextHeaderUpdateTs = 1000 + now;
-      // this.nextHeaderUpdateTs = 24 * 60 * 60 * 1000 + now;
+      this.nextHeaderUpdateTs = 24 * 60 * 60 * 1000 + now;
       return;
     }
     return cachedHeader;

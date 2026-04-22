@@ -149,7 +149,7 @@ export class ContentService {
   }
 
   private get restrictedScriptTextRegexp() {
-    const patterns = ["googletagmanager", "grSiteKey", 'var cl = "bx-core"'];
+    const patterns = ["googletagmanager", "grSiteKey", "jivo", 'var cl = "bx-core"'];
     return regexpByStringPatterns(patterns);
   }
 
@@ -169,15 +169,10 @@ export class ContentService {
       }
 
       if (/jivo/.test(src) && headlessCms.data.settings.scripts.jivochat) {
-        result.push({
-          src: headlessCms.data.settings.scripts.jivochat,
-          async: true,
-        });
         continue;
       }
 
       if (src && this.restrictedScriptSrcRegexp.test(src)) {
-        console.log(src);
         continue;
       }
 
@@ -193,6 +188,14 @@ export class ContentService {
         async: script.async ?? false,
       });
     }
+
+    if (headlessCms.data.settings.scripts.jivochat) {
+      result.push({
+        src: headlessCms.data.settings.scripts.jivochat,
+        async: true,
+      });
+    }
+
     return result;
   }
 

@@ -60,6 +60,7 @@ export class FileCacheService {
       writeFile(cacheFiles.scripts, JSON.stringify(data.scripts), "utf-8"),
     ]);
     if (isHeaderUpdate || !existsSync(this.headerFile)) {
+      logger.info("💾 New header has been saved.");
       await writeFile(this.headerFile, data.headerNavbar, "utf-8");
     }
   }
