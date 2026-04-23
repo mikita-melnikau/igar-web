@@ -19,9 +19,25 @@ export class FileCacheService {
   }
 
   private getCacheFilePath(path: string): string {
-    const pathToFetch = path ?? "/";
-    const fileName = !pathToFetch || pathToFetch === "/" ? "___" : pathToFetch;
-    return join(this.CACHE_DIR, encodeURIComponent(fileName));
+    const [pagePath, pageQuery] = path.split("?");
+    const [pagePathNoHast] = pagePath.split("#");
+    const pagePathNoSlashes = pagePathNoHast.replace(/^\/|\/$/g, "");
+    if (!pagePathNoSlashes) {
+      return join(this.CACHE_DIR, "HOMEPAGE");
+    }
+    const p = pagePathNoSlashes.replaceAll("/", "___");
+    if (!pageQuery) {
+      return join(this.CACHE_DIR, encodeURIComponent(p));
+    }
+    const pagination = pageQuery.split("&").find((p) => p.startsWith("p="));
+    if (!pagination) {
+      return join(this.CACHE_DIR, encodeURIComponent(p));
+    }
+    const paginationValue = pagination.replace("p=", "");
+    if (!/^\d+$/.test(paginationValue)) {
+      return join(this.CACHE_DIR, encodeURIComponent(p));
+    }
+    return join(this.CACHE_DIR, encodeURIComponent(`${p}_-_-_query-page---${paginationValue}`));
   }
 
   private generateFileMap(pathFromBody: string) {
@@ -81,11 +97,24 @@ export class FileCacheService {
 
   private PUBLIC_DIR = join(process.cwd(), "public", "ab-market");
 
-  get partnersStylesFile(): string {
+  private get partnersStylesFile(): string {
     return join(this.PUBLIC_DIR, "partners.bundle.css");
   }
 
   public async savePartnersStyles(css: string): Promise<void> {
     await writeFile(this.partnersStylesFile, css, "utf-8");
+  }
+
+  /* ======================
+     Unit tests
+  ====================== */
+
+  public _unitTests() {
+    if (process.env.NODE_ENV !== "test") {
+      throw new Error("Unit tests only = available in test environment");
+    }
+    return {
+      getCacheFilePath: this.getCacheFilePath.bind(this),
+    };
   }
 }

@@ -1,8 +1,11 @@
 import * as nodeFs from "node:fs";
 import * as fsPromises from "fs/promises";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { before } from "node:test";
+import { join } from "path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FileCacheService } from "./file-cache.service";
-import type { ContentResponse } from "@/src/types";
+import type { Mock } from "vitest";
+import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
 
 vi.mock("node:fs", () => ({
   existsSync: vi.fn(),
@@ -58,25 +61,102 @@ describe("FileCacheService", () => {
     expect(result).toBeNull();
   });
 
-  it("writes cache files correctly", async () => {
-    vi.mocked(fsPromises.writeFile).mockResolvedValue(undefined);
-    vi.mocked(nodeFs.existsSync).mockReturnValue(false);
+  describe("helpers", () => {
+    const CACHE_DIR = join(process.cwd(), "cache") + "/";
+    let helpers: ReturnType<FileCacheService["_unitTests"]>;
 
-    const data: ContentResponse = {
-      content: "<html>",
-      meta: {
-        title: "t",
-        description: "t",
-        keywords: "1",
-      },
-      links: [],
-      scripts: [],
-      headerNavbar: "<header>",
-    };
+    beforeEach(() => {
+      helpers = service._unitTests();
+    });
 
-    await service.store("/test", data, true);
+    it("getCacheFilePath - should correctly return file path", async () => {
+      const result = helpers.getCacheFilePath("/my-path/page");
+      expect(result.replace(CACHE_DIR, "")).toEqual("my-path___page");
+    });
 
-    // html, meta, links, scripts, header
-    expect(vi.mocked(fsPromises.writeFile)).toHaveBeenCalledTimes(5);
+    it("getCacheFilePath - should not depends on ending slash", async () => {
+      const result = helpers.getCacheFilePath("/my-path/page/");
+      expect(result.replace(CACHE_DIR, "")).toEqual("my-path___page");
+    });
+
+    it("getCacheFilePath - should correctly work with pagination query", async () => {
+      const page = "/my-path/page?unit=test&p=1";
+      const result = helpers.getCacheFilePath(page);
+      expect(result.replace(CACHE_DIR, "")).toEqual("my-path___page_-_-_query-page---1");
+    });
+
+    it("getCacheFilePath - should correctly work for homepage", async () => {
+      const result1 = helpers.getCacheFilePath("");
+      expect(result1.replace(CACHE_DIR, "")).toEqual("HOMEPAGE");
+      const result2 = helpers.getCacheFilePath("/");
+      expect(result2.replace(CACHE_DIR, "")).toEqual("HOMEPAGE");
+    });
+
+    it("getCacheFilePath - should ignore hashes", async () => {
+      const result = helpers.getCacheFilePath("/my-path/page/#123");
+      expect(result.replace(CACHE_DIR, "")).toEqual("my-path___page");
+    });
+  });
+
+  describe("store", () => {
+    let pathFromBody: string;
+    let data: ContentResponse;
+    let fakeContent: string;
+    let fakeLinks: HeadLink[];
+    let fakeMeta: PageMetadata;
+    let fakeScripts: CachedScript[];
+    let fakePageHeader: string;
+    let fsFileExists: Mock;
+
+    before(() => {
+      pathFromBody = "/unit-test/file-cache-service/store-method-test";
+      fakeContent = "<html>unit test page content</html>";
+      fakeMeta = { "unit-test": "fake-page-metadata" } as unknown as PageMetadata;
+      fakeLinks = [{ "unit-test": "fake-link" } as unknown as HeadLink];
+      fakeScripts = [{ "unit-test": "fake-link" } as unknown as CachedScript];
+      fakePageHeader = "<header>unit test page header</header>";
+      data = {
+        content: fakeContent,
+        meta: fakeMeta,
+        links: fakeLinks,
+        scripts: fakeScripts,
+        headerNavbar: fakePageHeader,
+      };
+      vi.mocked(fsPromises.writeFile).mockResolvedValue(undefined);
+      fsFileExists = vi.mocked(nodeFs.existsSync);
+    });
+
+    beforeEach(() => {
+      fsFileExists.mockReturnValue(false);
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    it("should writes cache files correctly", async () => {
+      await service.store({ data, pathFromBody });
+      expect(vi.mocked(fsPromises.writeFile)).toHaveBeenCalledTimes(5);
+      const calls = vi.mocked(fsPromises.writeFile).mock.calls;
+      expect(calls.map(([, data]) => data)).toEqual([
+        fakeContent,
+        JSON.stringify(fakeMeta),
+        JSON.stringify(fakeLinks),
+        JSON.stringify(fakeScripts),
+        fakePageHeader,
+      ]);
+    });
+
+    it("should skip header update if cache file exists", async () => {
+      fsFileExists.mockReturnValue(true);
+      await service.store({ data, pathFromBody });
+      expect(vi.mocked(fsPromises.writeFile)).toHaveBeenCalledTimes(4);
+    });
+
+    it("should update header if header exists flag is set", async () => {
+      fsFileExists.mockReturnValue(true);
+      await service.store({ data, pathFromBody, isHeaderUpdate: true });
+      expect(vi.mocked(fsPromises.writeFile)).toHaveBeenCalledTimes(5);
+    });
   });
 });
