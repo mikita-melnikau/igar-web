@@ -69,9 +69,14 @@ export class InFlightRequestService {
         logger.info(`${logInfo} Request started`, { endpoint: logEndpoint, cache: logIsCached });
         const html = await this.fetchContent(pathFromBody);
         const cachedHeader = this.getCachedHeader(cachedValue?.headerNavbar);
-        const content = this.contentService.parseHtml(html, cachedHeader);
-        await this.fileCache.store(pathFromBody, content, !cachedHeader);
-        return content;
+        const data = this.contentService.parseHtml(html, cachedHeader);
+        await this.fileCache.store({
+          pathFromBody,
+          data,
+          isNewCache: !cachedValue,
+          isHeaderUpdate: !cachedHeader,
+        });
+        return data;
       };
       const promise = composition();
       this.inFlight.set(key, promise);

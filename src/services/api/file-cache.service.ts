@@ -4,6 +4,13 @@ import { readFile, writeFile } from "fs/promises";
 import { logger } from "@/src/lib/api/logger";
 import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
 
+type FileCacheStorePayload = {
+  pathFromBody: string;
+  data: ContentResponse;
+  isNewCache?: boolean;
+  isHeaderUpdate?: boolean;
+};
+
 export class FileCacheService {
   private CACHE_DIR = join(process.cwd(), "cache");
 
@@ -51,7 +58,7 @@ export class FileCacheService {
     }
   }
 
-  public async store(pathFromBody: string, data: ContentResponse, isHeaderUpdate: boolean): Promise<void> {
+  public async store({ data, pathFromBody, isNewCache, isHeaderUpdate }: FileCacheStorePayload): Promise<void> {
     const cacheFiles = this.generateFileMap(pathFromBody);
     await Promise.all([
       writeFile(cacheFiles.html, data.content, "utf-8"),
@@ -60,8 +67,11 @@ export class FileCacheService {
       writeFile(cacheFiles.scripts, JSON.stringify(data.scripts), "utf-8"),
     ]);
     if (isHeaderUpdate || !existsSync(this.headerFile)) {
-      logger.info("💾 New header has been saved.");
       await writeFile(this.headerFile, data.headerNavbar, "utf-8");
+      logger.info("🚧 New header has been saved.");
+    }
+    if (isNewCache) {
+      logger.info(`💾 Files for: "${pathFromBody}"`);
     }
   }
 
