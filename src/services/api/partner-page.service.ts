@@ -1,3 +1,4 @@
+import { PageTransformerService } from "@/src/services/api/page-transformer.service";
 import { FileCacheService } from "./file-cache.service";
 import { InFlightRequestService } from "./in-flight-request.service";
 import { ContentService } from "./content.service";
@@ -30,7 +31,8 @@ export const partnersPageService =
   globalForServices.partnerPageService ??
   (() => {
     const cacheService = new FileCacheService();
-    const contentService = new ContentService();
+    const pageTransformerService = new PageTransformerService();
+    const contentService = new ContentService(pageTransformerService);
     const inFlightRequestService = new InFlightRequestService(cacheService, contentService);
     const service = new PartnersPageService(cacheService, inFlightRequestService);
 

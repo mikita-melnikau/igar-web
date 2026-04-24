@@ -72,7 +72,8 @@ export class InFlightRequestService {
         logger.info(`${logInfo} Successful response > ${pathWithKey.realPath}`, { pathWithKey });
         this.nextFetchTsMap.set(pathWithKey.cacheKey, this.nextFetchInterval + now);
         const cachedHeader = this.getCachedHeader(cachedValue?.headerNavbar);
-        const data = this.contentService.parseHtml(html, cachedHeader);
+        const data = this.contentService.parseHtml(html, pathWithKey.realPath, cachedHeader);
+
         await this.fileCache.store({
           pathWithKey,
           data,
