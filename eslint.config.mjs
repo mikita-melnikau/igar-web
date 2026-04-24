@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
   ...nextTs,
   reactHooks.configs.flat.recommended,
   {
+    ignores: [".run", "public", "cache"],
+  },
+  {
     plugins: {
       prettier: prettierPlugin,
       "@typescript-eslint": typescriptPlugin,
