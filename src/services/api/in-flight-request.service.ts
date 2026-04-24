@@ -7,9 +7,8 @@ import type { ContentService as ContentServiceImpl } from "./content.service";
 export class InFlightRequestService {
   private readonly inFlight = new Map<string, Promise<ContentResponse>>();
   private readonly nextFetchTsMap: Map<string, number> = new Map();
-  private readonly nextFetchInterval = process.env.NODE_ENV === "production" ? 5 * 60 * 1000 : 0;
-  private readonly headerUpdateInterval = process.env.NODE_ENV === "production" ? 24 * 60 * 60 * 1000 : 0;
-
+  private nextFetchInterval = process.env.NODE_ENV === "production" ? 5 * 60 * 1000 : 0;
+  private headerUpdateInterval = process.env.NODE_ENV === "production" ? 24 * 60 * 60 * 1000 : 0;
   private nextHeaderUpdateTs = 0;
 
   constructor(
@@ -92,5 +91,26 @@ export class InFlightRequestService {
       }
       throw error;
     }
+  }
+
+  /* ======================
+     Unit tests
+  ====================== */
+
+  public _unitTests() {
+    if (process.env.NODE_ENV !== "test") {
+      throw new Error("Unit tests only = available in test environment");
+    }
+    return {
+      getCachedHeader: this.getCachedHeader.bind(this),
+      // params:
+      nextHeaderUpdateTs: {
+        get: () => this.nextHeaderUpdateTs,
+        set: (val: number) => (this.nextHeaderUpdateTs = val),
+      },
+      headerUpdateInterval: {
+        set: (val: number) => (this.headerUpdateInterval = val),
+      },
+    };
   }
 }
