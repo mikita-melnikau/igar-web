@@ -96,3 +96,9 @@ export type CmsData = {
 export type Heartbeat = {
   ok: boolean;
 };
+
+export type PagePathWithKey = {
+  initialPath: string;
+  realPath: string;
+  cacheKey: string;
+};

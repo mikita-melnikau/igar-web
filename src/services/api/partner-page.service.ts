@@ -1,10 +1,9 @@
-import { headlessCms } from "@/src/services/api/headless-cms.service";
 import { FileCacheService } from "./file-cache.service";
 import { InFlightRequestService } from "./in-flight-request.service";
 import { ContentService } from "./content.service";
 import type { InFlightRequestService as InFlightRequestServiceImpl } from "./in-flight-request.service";
 import type { FileCacheService as FileCacheServiceImpl } from "./file-cache.service";
-import type { ContentResponse } from "@/src/types";
+import type { ContentResponse, PagePathWithKey } from "@/src/types";
 
 export class PartnersPageService {
   constructor(
@@ -12,25 +11,13 @@ export class PartnersPageService {
     private readonly inFlightRequest: InFlightRequestServiceImpl,
   ) {}
 
-  async fetch(pathFromBody: string): Promise<ContentResponse> {
-    const transformedPath = this.pathTransformer(pathFromBody);
-    const cachedResult = await this.fileCache.get(transformedPath);
+  async fetch(pathWithKey: PagePathWithKey): Promise<ContentResponse> {
+    const cachedResult = await this.fileCache.get(pathWithKey);
     if (cachedResult) {
-      this.inFlightRequest.fetch(transformedPath, cachedResult); // @IMPORTANT: No await!
+      this.inFlightRequest.fetch(pathWithKey, cachedResult); // @IMPORTANT: No await!
       return cachedResult;
     }
-    return await this.inFlightRequest.fetch(transformedPath);
-  }
-
-  private pathTransformer(path: string) {
-    const isHomepage = !path || path === "/";
-    if (headlessCms.data.settings.homepageLink && isHomepage) {
-      return headlessCms.data.settings.homepageLink;
-    }
-    if (isHomepage) {
-      return "/";
-    }
-    return path.split("?")[0];
+    return await this.inFlightRequest.fetch(pathWithKey);
   }
 }
 

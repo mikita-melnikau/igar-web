@@ -3,6 +3,7 @@ import { PartnersPageService } from "./partner-page.service";
 import type { Mock } from "vitest";
 import type { FileCacheService as FileCacheServiceImpl } from "@/src/services/api/file-cache.service";
 import type { InFlightRequestService as InFlightRequestServiceImpl } from "@/src/services/api/in-flight-request.service";
+import type { PagePathWithKey } from "@/src/types";
 
 const fileCacheMock = {
   get: vi.fn(),
@@ -25,27 +26,15 @@ vi.mock("@/src/services/api/headless-cms.service", () => ({
 describe("PartnersPageService", () => {
   let service: PartnersPageService;
 
+  const pagePath: PagePathWithKey = {
+    initialPath: "/unit-test",
+    realPath: "/unit-test",
+    cacheKey: "unit-test",
+  };
+
   beforeEach(() => {
     vi.resetAllMocks();
     service = new PartnersPageService(fileCacheMock, inFlightMock);
-  });
-
-  it("should transform root path to /kovrolin/", async () => {
-    (fileCacheMock.get as Mock).mockResolvedValue(null);
-    (inFlightMock.fetch as Mock).mockResolvedValue({ ok: true });
-
-    await service.fetch("/");
-
-    expect(inFlightMock.fetch).toHaveBeenCalledWith("/kovrolin/");
-  });
-
-  it("should keep non-root paths unchanged", async () => {
-    (fileCacheMock.get as Mock).mockResolvedValue(null);
-    (inFlightMock.fetch as Mock).mockResolvedValue({ ok: true });
-
-    await service.fetch("/partners/test");
-
-    expect(inFlightMock.fetch).toHaveBeenCalledWith("/partners/test");
   });
 
   it("should return cached result and trigger background fetch ", async () => {
@@ -54,20 +43,20 @@ describe("PartnersPageService", () => {
     (fileCacheMock.get as Mock).mockResolvedValue(cached);
     (inFlightMock.fetch as Mock).mockResolvedValue({ title: "fresh" });
 
-    const result = await service.fetch("/page");
+    const result = await service.fetch(pagePath);
 
     expect(result).toEqual(cached);
 
     expect(inFlightMock.fetch).toHaveBeenCalledTimes(1);
-    expect(inFlightMock.fetch).toHaveBeenCalledWith("/page", cached);
+    expect(inFlightMock.fetch).toHaveBeenCalledWith(pagePath, cached);
   });
 
   it("should call inFlight fetch without cached value when cache miss", async () => {
     (fileCacheMock.get as Mock).mockResolvedValue(null);
     (inFlightMock.fetch as Mock).mockResolvedValue({ title: "fresh" });
 
-    await service.fetch("/page");
+    await service.fetch(pagePath);
 
-    expect(inFlightMock.fetch).toHaveBeenCalledWith("/page");
+    expect(inFlightMock.fetch).toHaveBeenCalledWith(pagePath);
   });
 });
