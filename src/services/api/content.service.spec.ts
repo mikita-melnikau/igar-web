@@ -1,12 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { JSDOM } from "jsdom";
 import { ContentService } from "./content.service";
+import type { PageTransformerService as PageTransformerServiceImpl } from "@/src/services/api/page-transformer.service";
 
 vi.mock("@/config", () => ({
   config: {
     SOURCE_WEBSITE: "https://test.com",
   },
 }));
+const pageTransformerMock = {
+  transform: vi.fn(),
+} as unknown as PageTransformerServiceImpl;
 
 vi.mock("@/src/services/api/headless-cms.service", () => ({
   headlessCms: {
@@ -29,7 +33,7 @@ describe("content service", () => {
   let service: ContentService;
 
   beforeEach(() => {
-    service = new ContentService();
+    service = new ContentService(pageTransformerMock);
   });
 
   it("replaces links", () => {
@@ -41,7 +45,14 @@ describe("content service", () => {
       </body>
     `;
 
-    const result = service.parseHtml(html);
+    const result = service.parseHtml({
+      html,
+      pathWithKey: {
+        initialPath: "/",
+        realPath: "/",
+        cacheKey: "test",
+      },
+    });
 
     const dom = new JSDOM(result.content);
     const mail = dom.window.document.querySelector("#mail") as HTMLAnchorElement;
@@ -65,7 +76,14 @@ describe("content service", () => {
       </body>
     `;
 
-    const result = service.parseHtml(html);
+    const result = service.parseHtml({
+      html,
+      pathWithKey: {
+        initialPath: "/",
+        realPath: "/",
+        cacheKey: "test",
+      },
+    });
 
     const dom = new JSDOM(result.content);
     const a = dom.window.document.querySelector("a")!;
@@ -73,18 +91,6 @@ describe("content service", () => {
     expect(a.href).toBe("https://wa.me/375296038038");
     expect(a.className).not.toContain("max");
     expect(a.innerHTML).toContain("whatsapp.svg");
-  });
-
-  it("removes features section", () => {
-    const html = `
-      <body>
-        <div class="features-section-2025">REMOVE</div>
-      </body>
-    `;
-    const result = service.parseHtml(html);
-    const dom = new JSDOM(result.content);
-
-    expect(dom.window.document.querySelector(".features-section-2025")).toBeNull();
   });
 
   it("filters and normalizes links", () => {
@@ -98,7 +104,14 @@ describe("content service", () => {
       <body></body>
     `;
 
-    const result = service.parseHtml(html);
+    const result = service.parseHtml({
+      html,
+      pathWithKey: {
+        initialPath: "/",
+        realPath: "/",
+        cacheKey: "test",
+      },
+    });
 
     expect(result.links.length).toBe(1);
     expect(result.links[0].href).toBe("https://test.com/style.css");
@@ -115,7 +128,14 @@ describe("content service", () => {
       </body>
     `;
 
-    const result = service.parseHtml(html);
+    const result = service.parseHtml({
+      html,
+      pathWithKey: {
+        initialPath: "/",
+        realPath: "/",
+        cacheKey: "test",
+      },
+    });
 
     // only app.js survives
     expect(result.scripts.length).toBe(2);
