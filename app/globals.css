@@ -120,9 +120,7 @@ body {
 }
 
 /* kovrolin page */
-#ab-market [class*="KovrolinWhProgramSlider_root"] {
-    opacity: 0.9;
-}
+
 #ab-market [class*="KovrolinDesignBase_root"],
 #ab-market [class*="KovrolinColorMatch_left"],
 #ab-market [class*="KovrolinColorMatch_rightItem"],
@@ -130,17 +128,33 @@ body {
     border-color: #CFCFCF;
 }
 #ab-market .have-questions-section {
-   background-color:  #ffffff4a;
+   background:  transparent;
 }
 
-#ab-market .swiper {
-    opacity: 0.9;
+#ab-market [class*="KovrolinWhProgramSlide_root"],
+#ab-market [class*="KovrolinCoatingsSlide_root"] {
+    background-color: white;
+    margin-right: 5px;
 }
 
 #ab-market [class*="KovrolinDeliveryPayment_root"] {
     background: transparent;
 }
+#ab-market .have-questions-block {
+    background:white;
+}
+
+#ab-market .header__callback-link.telegram {
+    background-image: url(/ab-market/telegram.svg);
+}
 
 [style*="background:#F0F3F4"] {
     background: transparent !important;
+}
+
+/*footer logo shadow*/
+.footer-logo-shadow {
+    box-shadow:
+            inset 2px 2px 12px rgba(0,0,0,0.4),
+            inset -1px -1px 4px rgba(255,255,255,0.1);
 }
