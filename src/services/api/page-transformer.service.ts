@@ -3,6 +3,7 @@ import { headlessCms } from "@/src/services/api/headless-cms.service";
 enum PAGES {
   MAIN = "/",
   CONTACT = "/contacts/",
+  KOVROLIN = "/kovrolin/",
 }
 
 type PageHandler = (document: Document) => void;
@@ -61,18 +62,42 @@ export class PageTransformerService {
     }
   }
 
+  private transformKovrolinPage(document: Document) {
+    const deliveryPaymentDetails = document.querySelector('[class^="KovrolinDeliveryPayment_root"]');
+
+    if (deliveryPaymentDetails) {
+      deliveryPaymentDetails.remove();
+    }
+  }
+
   private pageHandlers: Record<string, PageHandler> = {
     [PAGES.MAIN]: this.transformMainPage,
     [PAGES.CONTACT]: this.transformContactPage,
+    [PAGES.KOVROLIN]: this.transformKovrolinPage,
   };
 
   private defaultHandler(document: Document) {
     const contactSection = document.querySelector(
       '[class^="ContactsSection_root"], [class^="kovrolin-detail_contacts"]',
     );
+    const honestService = document.querySelector(".honest-service");
+    const infoAccount = document.querySelector(".info-account");
+    const numberOne = document.querySelector(".number-one");
 
     if (contactSection) {
       contactSection.remove();
+    }
+
+    if (honestService) {
+      honestService.remove();
+    }
+
+    if (infoAccount) {
+      infoAccount.remove();
+    }
+
+    if (numberOne) {
+      numberOne.remove();
     }
   }
 
