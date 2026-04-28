@@ -77,7 +77,9 @@ export class PageTransformerService {
   };
 
   private defaultHandler(document: Document) {
-    const contactSection = document.querySelector('[class^="ContactsSection_root"]');
+    const contactSection = document.querySelector(
+      '[class^="ContactsSection_root"], [class^="kovrolin-detail_contacts"]',
+    );
     const honestService = document.querySelector(".honest-service");
     const infoAccount = document.querySelector(".info-account");
     const numberOne = document.querySelector(".number-one");
