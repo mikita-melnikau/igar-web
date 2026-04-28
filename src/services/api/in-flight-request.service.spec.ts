@@ -42,7 +42,15 @@ describe("InFlightRequestService", () => {
     const result = await service.fetch(pagePath);
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(contentServiceMock.parseHtml).toHaveBeenCalledWith("<html>test</html>", undefined);
+    expect(contentServiceMock.parseHtml).toHaveBeenCalledWith({
+      html: "<html>test</html>",
+      pathWithKey: {
+        cacheKey: "unit-test",
+        initialPath: "/unit-test",
+        realPath: "/unit-test",
+      },
+      cachedHeader: undefined,
+    });
     expect(fileCacheMock.store).toHaveBeenCalledTimes(1);
     expect(result).toEqual({ title: "parsed" });
   });

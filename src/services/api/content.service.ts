@@ -3,9 +3,12 @@ import { config } from "@/config";
 import { headlessCms } from "@/src/services/api/headless-cms.service";
 import { formatPhoneBY } from "@/src/helpers/shared/contacts";
 import { regexpByStringPatterns } from "@/src/helpers/shared/regexp";
-import type { CachedScript, ContentResponse, HeadLink, PageMetadata } from "@/src/types";
+import type { PageTransformerService as PageTransformerServiceImpl } from "./page-transformer.service";
+import type { CachedScript, ContentResponse, HeadLink, PageMetadata, PagePathWithKey } from "@/src/types";
 
 export class ContentService {
+  constructor(private readonly pageTransformerService: PageTransformerServiceImpl) {}
+
   /* ======================
      Replacements
   ====================== */
@@ -48,60 +51,6 @@ export class ContentService {
   /* ======================
      Extractors
   ====================== */
-
-  private fixPageContent(document: Document) {
-    const featuresBlock = document.querySelector(".features-section-2025");
-    if (featuresBlock) {
-      featuresBlock.remove();
-    }
-    const nevaBlock = document.querySelector(".neva-taft");
-    const main = document.querySelector("main");
-    if (main && nevaBlock) {
-      const div = document.createElement("div");
-      div.classList.add("container-2025");
-      div.appendChild(nevaBlock);
-
-      main.insertAdjacentElement("afterbegin", div);
-    }
-
-    const mapBlock = document.querySelector("#contacts-map");
-
-    if (mapBlock) {
-      mapBlock.setAttribute(
-        "data-center-coords",
-        `${headlessCms.data.contact.map.centerCoords.lat},${headlessCms.data.contact.map.centerCoords.lng}`,
-      );
-
-      mapBlock.setAttribute("data-marker-coords", JSON.stringify(headlessCms.data.contact.map.markerCoords));
-    }
-
-    const tabs = document.querySelector(".contacts-cities-tabs");
-    const maxContacts = document.querySelectorAll(".contacts__item--max");
-    if (tabs) {
-      tabs.remove();
-    }
-    maxContacts.forEach((contact) => contact.remove());
-    const addresses = document.querySelectorAll(".contacts__address");
-
-    addresses.forEach((address) => (address.textContent = headlessCms.data.contact.address));
-
-    const contactForm = document.querySelector(".contacts-form-wrap__body");
-
-    if (contactForm) {
-      contactForm.remove();
-    }
-
-    const requisitesBlock = document.querySelector(".requisites_body");
-
-    if (requisitesBlock) {
-      const paragraphs = requisitesBlock.querySelectorAll("p");
-
-      paragraphs[0].textContent = headlessCms.data.contact.person;
-      paragraphs[1].textContent = `УНП ${headlessCms.data.contact.unp}`;
-      paragraphs[2].textContent = `${headlessCms.data.contact.address}`;
-    }
-  }
-
   private extractLinks(document: Document): HeadLink[] {
     const result: HeadLink[] = [];
     const links = Array.from(document.querySelectorAll("link"));
@@ -280,7 +229,15 @@ export class ContentService {
   /* ======================
      Main method
   ====================== */
-  public parseHtml(html: string, cachedHeader?: string): ContentResponse {
+  public parseHtml({
+    html,
+    pathWithKey,
+    cachedHeader,
+  }: {
+    html: string;
+    pathWithKey: PagePathWithKey;
+    cachedHeader?: string;
+  }): ContentResponse {
     const dom = new JSDOM(html);
     const { window } = dom;
     const { document } = window;
@@ -295,7 +252,7 @@ export class ContentService {
 
     this.removeHeader(document);
     this.removeFooter(document);
-    this.fixPageContent(document);
+    this.pageTransformerService.transform(pathWithKey.realPath, document);
 
     const body = document.querySelector("body");
     const content = body?.innerHTML ?? "<h1>Body is empty</h1>";
