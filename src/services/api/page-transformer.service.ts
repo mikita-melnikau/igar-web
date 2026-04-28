@@ -67,7 +67,7 @@ export class PageTransformerService {
   };
 
   private defaultHandler(document: Document) {
-    const contactSection = document.querySelector(".ContactsSection_root__Epqzf");
+    const contactSection = document.querySelector('[class^="ContactsSection_root"]');
 
     if (contactSection) {
       contactSection.remove();
