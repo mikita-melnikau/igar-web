@@ -7,6 +7,13 @@
   --footer-muted: #9da6af;
 }
 
+/*tw variables*/
+@theme inline {
+    --color-logo-color: var(--logo-color);
+    --color-footer-color: var(--footer-bg);
+    --color-footer-muted-color: var(--footer-muted);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -76,8 +83,7 @@ body {
     opacity: 0.9;
 }
 
-#ab-market .container-2025 .KovrolinWhProgramSlider_root__wYpkC,
-#ab-market .swiper {
+#ab-market .container-2025 .KovrolinWhProgramSlider_root__wYpkC {
     background: #f0f3f4;
     border-radius: 12px;
     padding: 0 20px;
@@ -98,6 +104,9 @@ body {
     #ab-market .app-green-line-wrapper {
         display: none;
     }
+    #ab-market .app-logo {
+        padding-left: 0;
+    }
     #ab-market .container-2025,
     #ab-market .have-questions-section-2025 {
         opacity: 1;
@@ -109,9 +118,31 @@ body {
         padding-bottom: 0;
     }
 }
-/*tw variables*/
-@theme inline {
-    --color-logo-color: var(--logo-color);
-    --color-footer-color: var(--footer-bg);
-    --color-footer-muted-color: var(--footer-muted);
+
+/* kovrolin page */
+
+#ab-market .KovrolinWhProgramSlider_root__wYpkC {
+    opacity: 0.9;
+}
+#ab-market .KovrolinDesignBase_root__mpF0v,
+#ab-market .KovrolinColorMatch_left__tqaql,
+#ab-market .KovrolinColorMatch_rightItem__SWqo1,
+.KovrolinDescriptions_image__RuDfx{
+    border-color: #CFCFCF;
+}
+#ab-market .have-questions-section {
+   background-color:  #ffffff4a;
+}
+
+#ab-market .swiper {
+    opacity: 0.9;
+}
+
+#ab-market .KovrolinDeliveryPayment_root__KdmC2 {
+    background: transparent ;
+}
+
+
+[style*="background:#F0F3F4"] {
+    background: transparent !important;
 }
