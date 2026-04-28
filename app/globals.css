@@ -106,7 +106,9 @@ body {
     }
     #ab-market .app-logo {
         padding-left: 0;
+        width: auto;
     }
+
     #ab-market .container-2025,
     #ab-market .have-questions-section-2025 {
         opacity: 1;
@@ -120,7 +122,6 @@ body {
 }
 
 /* kovrolin page */
-
 #ab-market [class*="KovrolinDesignBase_root"],
 #ab-market [class*="KovrolinColorMatch_left"],
 #ab-market [class*="KovrolinColorMatch_rightItem"],
@@ -150,6 +151,11 @@ body {
 
 [style*="background:#F0F3F4"] {
     background: transparent !important;
+}
+
+#ab-market .header__callback-link {
+    max-width: 24px;
+    max-height: 24px;
 }
 
 /*footer logo shadow*/
