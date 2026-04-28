@@ -120,14 +120,13 @@ body {
 }
 
 /* kovrolin page */
-
-#ab-market .KovrolinWhProgramSlider_root__wYpkC {
+#ab-market [class*="KovrolinWhProgramSlider_root"] {
     opacity: 0.9;
 }
-#ab-market .KovrolinDesignBase_root__mpF0v,
-#ab-market .KovrolinColorMatch_left__tqaql,
-#ab-market .KovrolinColorMatch_rightItem__SWqo1,
-.KovrolinDescriptions_image__RuDfx{
+#ab-market [class*="KovrolinDesignBase_root"],
+#ab-market [class*="KovrolinColorMatch_left"],
+#ab-market [class*="KovrolinColorMatch_rightItem"],
+#ab-market [class*="KovrolinDescriptions_image"]:first-child {
     border-color: #CFCFCF;
 }
 #ab-market .have-questions-section {
@@ -138,10 +137,9 @@ body {
     opacity: 0.9;
 }
 
-#ab-market .KovrolinDeliveryPayment_root__KdmC2 {
-    background: transparent ;
+#ab-market [class*="KovrolinDeliveryPayment_root"] {
+    background: transparent;
 }
-
 
 [style*="background:#F0F3F4"] {
     background: transparent !important;
