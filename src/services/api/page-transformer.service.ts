@@ -66,7 +66,13 @@ export class PageTransformerService {
     [PAGES.CONTACT]: this.transformContactPage,
   };
 
-  private defaultHandler(document: Document) {}
+  private defaultHandler(document: Document) {
+    const contactSection = document.querySelector('[class^="ContactsSection_root"]');
+
+    if (contactSection) {
+      contactSection.remove();
+    }
+  }
 
   public transform(path: string, document: Document) {
     const handler = this.pageHandlers[path];
