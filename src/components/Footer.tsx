@@ -40,7 +40,10 @@ export const AppFooter = ({ cms }: AppFooterProps) => {
       <div className={"container-2025"}>
         <div className={"grid gap-10 md:grid-cols-12 py-10"}>
           <div className={"md:!ml-[var(--logo-left-offset)] ml-0 md:col-span-5 flex flex-col gap-4"}>
-            <Image src="/ab-market/logo.jpg" alt="logo" width={162} height={70} preload style={{ height: "auto" }} />
+            <div className="relative w-fit leading-[0] overflow-hidden group">
+              <div className="pointer-events-none absolute inset-0 z-10 footer-logo-shadow" />
+              <Image src="/ab-market/logo.jpg" alt="logo" width={162} height={70} preload className="block h-auto" />
+            </div>
             <p className={"text-footer-muted-color mb-0! max-w-xs text-sm leading-relaxed"}>
               Поставки по всей Беларуси, помощь с подбором и расчётом под объект.
             </p>
