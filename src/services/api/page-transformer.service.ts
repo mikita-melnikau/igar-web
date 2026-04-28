@@ -67,7 +67,9 @@ export class PageTransformerService {
   };
 
   private defaultHandler(document: Document) {
-    const contactSection = document.querySelector('[class^="ContactsSection_root"]');
+    const contactSection = document.querySelector(
+      '[class^="ContactsSection_root"], [class^="kovrolin-detail_contacts"]',
+    );
 
     if (contactSection) {
       contactSection.remove();
