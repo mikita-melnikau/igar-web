@@ -32,6 +32,7 @@ export type AbMarketPageParams = {
 type CmsContent = {
   headerGreyText: string;
   partnersSiteDeadTitle: string;
+  priceMultiplier: number;
 };
 
 type Coords = {
