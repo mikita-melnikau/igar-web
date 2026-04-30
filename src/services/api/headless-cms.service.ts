@@ -30,6 +30,7 @@ class HeadlessCmsService {
         <p><span>а также <strong>партнером</strong>&nbsp;<a class="text-inherit!  border-b-0! !underline" target="_blank" href="https://velvet-pro.ru/" rel="noopener">ООО "Вельвет Про"</a>&nbsp;- ведущего производителя ковров и штор под заказ в Российской Федерации.</span></p>
       `,
       partnersSiteDeadTitle: "Чтобы заказать ковролин вам не нужен сайт!",
+      priceMultiplier: 1.0,
     },
     settings: {
       pingEndpoint: "/local/templates/new/static/dist/img/close.svg",
@@ -106,6 +107,7 @@ class HeadlessCmsService {
             content {
               headerGreyText
               partnersSiteDeadTitle
+              priceMultiplier
             }
             settings {
               pingEndpoint

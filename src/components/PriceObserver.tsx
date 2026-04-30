@@ -4,6 +4,7 @@ import { useLayoutEffect } from "react";
 
 type Props = {
   rubToBynRate: number;
+  priceMultiplier?: number;
 };
 
 const PRICE_MARK_CLASS = "ab-price";
@@ -150,12 +151,14 @@ function scan(root: ParentNode, rate: number) {
   }
 }
 
-export const PriceObserver = ({ rubToBynRate }: Props) => {
+export const PriceObserver = ({ rubToBynRate, priceMultiplier = 1 }: Props) => {
+  const effectiveRate = rubToBynRate * priceMultiplier;
+
   useLayoutEffect(() => {
     let cleanup: (() => void) | null = null;
 
     const timer = setTimeout(() => {
-      scan(document.body, rubToBynRate);
+      scan(document.body, effectiveRate);
 
       const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
@@ -164,7 +167,7 @@ export const PriceObserver = ({ rubToBynRate }: Props) => {
 
           const markedContainer = parentElement?.closest(`.${PRICE_MARK_CLASS}`);
           if (markedContainer instanceof HTMLElement) {
-            reprocessMarkedNode(markedContainer, rubToBynRate);
+            reprocessMarkedNode(markedContainer, effectiveRate);
             continue;
           }
 
@@ -174,9 +177,9 @@ export const PriceObserver = ({ rubToBynRate }: Props) => {
                 if (node.classList.contains(PRICE_MARK_CLASS) || node.closest(`.${PRICE_MARK_CLASS}`)) {
                   return;
                 }
-                scan(node, rubToBynRate);
+                scan(node, effectiveRate);
               } else if (node.nodeType === Node.TEXT_NODE && node.parentElement) {
-                scan(node.parentElement, rubToBynRate);
+                scan(node.parentElement, effectiveRate);
               }
             });
           }
@@ -184,7 +187,7 @@ export const PriceObserver = ({ rubToBynRate }: Props) => {
           if (mutation.type === "characterData") {
             const parent = mutation.target.parentElement;
             if (parent && !parent.closest(`.${PRICE_MARK_CLASS}`)) {
-              scan(parent, rubToBynRate);
+              scan(parent, effectiveRate);
             }
           }
         }
@@ -203,7 +206,7 @@ export const PriceObserver = ({ rubToBynRate }: Props) => {
       clearTimeout(timer);
       cleanup?.();
     };
-  }, [rubToBynRate]);
+  }, [effectiveRate]);
 
   return null;
 };
