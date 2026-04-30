@@ -4,8 +4,6 @@ import { Inter, Montserrat, Roboto } from "next/font/google";
 import { headers } from "next/headers";
 import { AppGreenLine } from "@/src/components/AppGreenLine";
 import { getBitrixHtmlClasses } from "@/src/lib/client/bitrix-classes";
-import { getRubToBynRate } from "@/src/lib/client/rub-to-byn-rate";
-import { PriceObserver } from "@/src/components/PriceObserver";
 
 const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
@@ -36,8 +34,6 @@ const RootLayout = async ({
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") ?? "";
   const bitrixClasses = getBitrixHtmlClasses(userAgent);
-  const rubToBynRate = await getRubToBynRate();
-  console.log(`rubToBynRate  = ${rubToBynRate}`);
 
   return (
     <html lang="ru" className={bitrixClasses}>
@@ -47,7 +43,6 @@ const RootLayout = async ({
       <body id="ab-market" className={`${inter.className} ${roboto.className} ${montserrat.className}`}>
         <AppGreenLine />
         <div>{children}</div>
-        <PriceObserver rubToBynRate={rubToBynRate} />
       </body>
     </html>
   );
