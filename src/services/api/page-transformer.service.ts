@@ -3,6 +3,7 @@ import { headlessCms } from "@/src/services/api/headless-cms.service";
 enum PAGES {
   MAIN = "/",
   CONTACT = "/contacts/",
+  KOVROLIN = "/kovrolin/",
 }
 
 type PageHandler = (document: Document) => void;
@@ -61,9 +62,17 @@ export class PageTransformerService {
     }
   }
 
+  private transformKovrolinPage(document: Document) {
+    const freeSamples = document.querySelector('[class^="KovrolinDescriptions_imagesContainer"]');
+    if (freeSamples) {
+      freeSamples.remove();
+    }
+  }
+
   private pageHandlers: Record<string, PageHandler> = {
     [PAGES.MAIN]: this.transformMainPage,
     [PAGES.CONTACT]: this.transformContactPage,
+    [PAGES.KOVROLIN]: this.transformKovrolinPage,
   };
 
   private defaultHandler(document: Document) {
