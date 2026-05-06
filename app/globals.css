@@ -164,3 +164,50 @@ body {
             inset 2px 2px 12px rgba(0,0,0,0.4),
             inset -1px -1px 4px rgba(255,255,255,0.1);
 }
+
+/*loader*/
+#ab-market [class^="KovrolinWhProgramSlide_price"],
+#ab-market [class^="KovrolinCoatingsSlide_price"],
+#ab-market [class^="Product_itemPrice"]:not([class^="Product_itemPriceSize"]),
+#ab-market .quantity-discount__price,
+#ab-market .product-options__total,
+#ab-market .product-options__price {
+    display: inline-block;
+    min-width: 80px;
+    position: relative;
+    color: transparent;
+}
+
+#ab-market [class^="KovrolinWhProgramSlide_price"]::after,
+#ab-market [class^="KovrolinCoatingsSlide_price"]::after,
+#ab-market [class^="Product_itemPrice"]:not([class^="Product_itemPriceSize"])::after,
+#ab-market .quantity-discount__price::after,
+#ab-market .product-options__total::after,
+#ab-market .product-options__price::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    background: linear-gradient(
+            90deg,
+            #eee 25%,
+            #ddd 37%,
+            #eee 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 1.2s infinite;
+}
+
+
+#ab-market .ab-loaded {
+    color: initial;
+}
+
+#ab-market .ab-loaded::after {
+    display: none;
+}
+
+@keyframes shimmer {
+    0% { background-position: 100% 0 }
+    100% { background-position: -100% 0 }
+}
