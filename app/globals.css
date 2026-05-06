@@ -165,8 +165,7 @@ body {
             inset -1px -1px 4px rgba(255,255,255,0.1);
 }
 
-/*loaders*/
-
+/*loader*/
 #ab-market [class^="KovrolinWhProgramSlide_price"],
 #ab-market [class^="KovrolinCoatingsSlide_price"],
 #ab-market [class^="Product_itemPrice"]:not([class^="Product_itemPriceSize"]),
@@ -199,21 +198,12 @@ body {
     animation: shimmer 1.2s infinite;
 }
 
-#ab-market [class^="KovrolinWhProgramSlide_price"].ab-loaded,
-#ab-market [class^="KovrolinCoatingsSlide_price"].ab-loaded,
-#ab-market [class^="Product_itemPrice"]:not([class^="Product_itemPriceSize"]).ab-loaded,
-#ab-market .quantity-discount__price.ab-loaded,
-#ab-market .product-options__total.ab-loaded,
-#ab-market .product-options__price.ab-loaded {
+
+#ab-market .ab-loaded {
     color: initial;
 }
 
-#ab-market [class^="KovrolinWhProgramSlide_price"].ab-loaded::after,
-#ab-market [class^="KovrolinCoatingsSlide_price"].ab-loaded::after,
-#ab-market [class^="Product_itemPrice"]:not([class^="Product_itemPriceSize"]).ab-loaded::after,
-#ab-market .quantity-discount__price.ab-loaded::after,
-#ab-market .product-options__total.ab-loaded::after,
-#ab-market .product-options__price.ab-loaded::after {
+#ab-market .ab-loaded::after {
     display: none;
 }
 
